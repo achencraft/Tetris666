@@ -13,7 +13,7 @@ class Boxies {
         SDL_Rect src;
         int x;
         int y;
-}
+};
 
 
 #endif

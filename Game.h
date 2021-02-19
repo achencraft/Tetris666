@@ -2,11 +2,16 @@
 #define _GAME_H_
 
 #include "WindowSurface.h"
+#include "Boxies.h"
+#include <iostream>
+#include <vector>
+#include <map>
 
 class Game
 {
     
     private:
+        WindowSurface* win;
         int score;
         int largeur_grille;
         int hauteur_grille;
@@ -19,10 +24,11 @@ class Game
 
 
     public:
-        Game();
+        inline Game():
+            win(nullptr) {};
         void init();
         void draw();
-        void keyboard();
+        void keyboard(const Uint8* keys);
         void loop();
 
 };

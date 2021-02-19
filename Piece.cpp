@@ -2,10 +2,10 @@
 
 Piece::Piece() {}
 
-Piece::changerOrientation(int nouvelle_orientation) {
-    this.orientation = nouvelle_orientation;
+void Piece::changerOrientation(int nouvelle_orientation) {
+    orientation = nouvelle_orientation;
 }
 
-Piece::poser() {
-    this.estPose = true;
+void Piece::poser() {
+    estPose = true;
 }
