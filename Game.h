@@ -3,19 +3,22 @@
 
 #include "WindowSurface.h"
 #include "Boxies.h"
+#include "Piece.h"
 #include <iostream>
 #include <vector>
 #include <map>
 
 class Game
 {
-    
+
     private:
         WindowSurface* win;
+        Piece* piece_courante;
         int score;
         int largeur_grille;
         int hauteur_grille;
-        std::vector<std::vector<Boxies>> matrice_jeu;
+        std::vector<Boxies> grille;
+        bool nouvelle_piece;
 
         // methodes
         void verificationLignes();

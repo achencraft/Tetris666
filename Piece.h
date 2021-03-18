@@ -3,11 +3,15 @@
 
 #include "Boxies.h"
 #include <vector>
+#include <algorithm>
+#include <functional>
 
-class Piece 
+class Piece
 {
     public:
         Piece();
+        //Piece(int motif, int color);
+        std::vector<Boxies> get_boxies();
 
     protected:
         bool estPose;
@@ -18,6 +22,7 @@ class Piece
         // methode
         void changerOrientation(int nouvelle_orientation);
         void poser();
+        void chuter();
 };
 
 
