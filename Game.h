@@ -14,6 +14,7 @@ class Game
     private:
         WindowSurface* win;
         Piece* piece_courante;
+        bool yatilUnePieceDansLavion;
         int score;
         int largeur_grille;
         int hauteur_grille;

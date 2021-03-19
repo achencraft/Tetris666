@@ -29,6 +29,6 @@ void Piece::chuter()
     std::for_each(boxies.begin(),boxies.end(), std::mem_fun_ref(&Boxies::chuter));
 }
 
-std::vector<Boxies> Piece::get_boxies() {
-  return boxies;
+std::vector<Boxies> *Piece::get_boxies() {
+  return &boxies;
 }

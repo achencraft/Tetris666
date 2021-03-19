@@ -11,13 +11,13 @@ class Piece
     public:
         Piece();
         //Piece(int motif, int color);
-        std::vector<Boxies> get_boxies();
+        std::vector<Boxies> *get_boxies();
 
     protected:
         bool estPose;
         int orientation;
-        std::vector<Boxies> boxies;
         std::vector<int> color;
+        std::vector<Boxies> boxies;
 
         // methode
         void changerOrientation(int nouvelle_orientation);
