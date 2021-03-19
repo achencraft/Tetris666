@@ -31,11 +31,11 @@ void Game::draw()
   }
 
   if(yatilUnePieceDansLavion) {
-    std::vector<Boxies> *piece = piece_courante->get_boxies();
+    std::vector<Boxies> *piece = piece_courante.get_boxies();
     // std::cout << "taille pièce = " << int(piece->size()) << "\n";
     for (size_t i = 0; i < piece->size(); i++) {
-      SDL_Rect destBoxie = { int(&piece[i].get_x()), int(&piece[i].get_y()), 0, 0 };
-      SDL_Rect *srcBoxie= win->sprites.at(&piece[i].get_sprite()).get();
+      SDL_Rect destBoxie = { int(piece->at(i).get_x()), int(piece->at(i).get_y()), 0, 0 };
+      SDL_Rect *srcBoxie= win->sprites.at(piece->at(i).get_sprite()).get();
       SDL_BlitSurface(win->plancheSprites, srcBoxie, win->win_surf, &destBoxie);
     }
   }
@@ -85,7 +85,7 @@ void Game::loop()
     if(this->nouvelle_piece)
     {
       Piece p = Piece();
-      this->piece_courante = &p;
+      this->piece_courante = p;
       std::cout << "nouvelle pièce!!!\n";
       // this->grille.insert(this->grille.end(),p);
         //la liste des boxies de la piece);
