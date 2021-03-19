@@ -22,5 +22,17 @@ std::string Boxies::get_sprite() {
 
 void Boxies::chuter()
 {
-    y = y - 1;
+    y = y + 1;
+}
+
+void Boxies::gauche()
+{
+  x = x - 5;
+  std::cout << "x = " << this->x << "\n";
+}
+
+void Boxies::droite()
+{
+  x = x + 5;
+  std::cout << "x = " << this->x << "\n";
 }

@@ -23,7 +23,6 @@ void Game::draw()
   SDL_BlitSurface(win->plancheSprites, srcFond, win->win_surf, &dest);
 
   //placer les boxies
-  // std::cout << "taille grille = " << int(this->grille.size()) << "\n";
   for (size_t i = 0; i < this->grille.size(); i++) {
     SDL_Rect destBoxie = { int(this->grille[i].get_x()), int(this->grille[i].get_y()), 0, 0 };
     SDL_Rect *srcBoxie= win->sprites.at(this->grille[i].get_sprite()).get();
@@ -32,8 +31,10 @@ void Game::draw()
 
   if(yatilUnePieceDansLavion) {
     std::vector<Boxies> *piece = piece_courante.get_boxies();
-    // std::cout << "taille pièce = " << int(piece->size()) << "\n";
     for (size_t i = 0; i < piece->size(); i++) {
+      // int x = int(piece->at(i).get_x());
+      // int y = int(piece->at(i).get_y());
+      // std::cout << "x = " << x << ", y = " << y << "\n";
       SDL_Rect destBoxie = { int(piece->at(i).get_x()), int(piece->at(i).get_y()), 0, 0 };
       SDL_Rect *srcBoxie= win->sprites.at(piece->at(i).get_sprite()).get();
       SDL_BlitSurface(win->plancheSprites, srcBoxie, win->win_surf, &destBoxie);
@@ -46,6 +47,10 @@ void Game::loop()
 {
 
   bool quit = false;
+  int w, h;
+  this->win->get_dimension(&h,&w);
+
+
   while(!quit)
   {
 
@@ -68,7 +73,12 @@ void Game::loop()
             this->nouvelle_piece = true;
             this->yatilUnePieceDansLavion = true;
             break;
-
+          case SDLK_LEFT:
+            this->piece_courante.gauche(w);
+            break;
+          case SDLK_RIGHT:
+            this->piece_courante.droite(w);
+            break;
           default:
             break;
           }
@@ -87,16 +97,18 @@ void Game::loop()
       Piece p = Piece();
       this->piece_courante = p;
       std::cout << "nouvelle pièce!!!\n";
-      // this->grille.insert(this->grille.end(),p);
-        //la liste des boxies de la piece);
       this->nouvelle_piece = false;
     }
 
     //actualise la position des boxies
+    this->piece_courante.chuter(h);
 
+    // gestion des bords
+    // this->piece_courante->isPieceOnTheGrille(this->grille);
 
     //génère l'affichage
     this->draw();
+
     // affiche la surface
     SDL_UpdateWindowSurface(win->window);
   }

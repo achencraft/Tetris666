@@ -20,6 +20,8 @@ class Game
         int hauteur_grille;
         std::vector<Boxies> grille;
         bool nouvelle_piece;
+        bool gogoche;
+        bool drodroite;
 
         // methodes
         void verificationLignes();

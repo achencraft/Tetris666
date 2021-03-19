@@ -12,6 +12,12 @@ class Piece
         Piece();
         //Piece(int motif, int color);
         std::vector<Boxies> *get_boxies();
+        void chuter(int hauteur);
+        void gauche(int largeur);
+        void droite(int largeur);
+        // bool isPieceOnTheBorder(std::vector<Boxies> grille);
+        bool isPieceOnTheBorderX(int largeur);
+        bool isPieceOnTheBorderY(int hauteur);
 
     protected:
         bool estPose;
@@ -22,7 +28,6 @@ class Piece
         // methode
         void changerOrientation(int nouvelle_orientation);
         void poser();
-        void chuter();
 };
 
 
