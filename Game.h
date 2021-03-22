@@ -17,13 +17,12 @@ class Game
         WindowSurface* win;
         Piece piece_courante;
         bool yatilUnePieceDansLavion;
+        bool yatilUnePieceEnTrainDeTomber;
+        bool ZePartiiii;
         int score;
         int largeur_grille;
         int hauteur_grille;
         std::vector<Boxies> grille;
-        bool nouvelle_piece;
-        bool gogoche;
-        bool drodroite;
 
         // methodes
         void addPieceToTheGrille();

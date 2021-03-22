@@ -118,7 +118,7 @@ bool Piece::isPieceOnTheGrilleY(std::vector<Boxies> grille) {
   for (size_t i = 0; i < this->boxies.size(); i++) {
     for (size_t j = 0; j < grille.size(); j++) {
       // ils sont sur la même colonne
-      if(this->boxies[i].get_x() == grille[i].get_x()) {
+      if(this->boxies[i].get_x() == grille[j].get_x()) {
         if(this->boxies[i].get_y()+1 == grille[j].get_y()) {
           return false;
         }
