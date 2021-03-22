@@ -98,7 +98,7 @@ void Game::loop()
         case SDL_MOUSEBUTTONDOWN:
         printf("mouse click %d\n", event.button.button);
         break;
-        case SDL_KEYDOWN:
+        case SDL_KEYUP:
           switch (event.key.keysym.sym)
           {
           case SDLK_RETURN:
@@ -115,6 +115,20 @@ void Game::loop()
           case SDLK_RIGHT:
             if(this->yatilUnePieceDansLavion)
               this->piece_courante.droite(largeur_grille, this->grille);
+            break;
+        case SDLK_DOWN:
+            delai_chute = 1000;
+            break;
+          default:
+            break;
+          }
+
+        break;
+        case SDL_KEYDOWN:
+          switch (event.key.keysym.sym)
+          {
+          case SDLK_DOWN:
+            delai_chute = 50;
             break;
           default:
             break;
