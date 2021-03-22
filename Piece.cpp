@@ -6,7 +6,14 @@ Piece::Piece() {
 
     //on créé un seul boxi pour l'instant
     Boxies b = Boxies("boxi",0,0);
+    Boxies b1 = Boxies("boxi",1,0);
+    Boxies b2 = Boxies("boxi",2,0);
+    Boxies b3 = Boxies("boxi",3,0);
     boxies.insert(boxies.end(),b);
+    boxies.insert(boxies.end(),b1);
+    boxies.insert(boxies.end(),b2);
+    boxies.insert(boxies.end(),b3);
+
 }
 
 /*Piece::Piece(int motif, int color)
