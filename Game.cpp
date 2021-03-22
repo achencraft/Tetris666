@@ -9,6 +9,13 @@ void Game::init()
   yatilUnePieceDansLavion = false;
 }
 
+void Game::addPieceToTheGrille() {
+  std::vector<Boxies> *piece = this->piece_courante.get_boxies();
+  for (size_t i = 0; i < piece->size(); i++) {
+    this->grille.insert(this->grille.end(),piece->at(i));
+  }
+}
+
 void Game::keyboard(const Uint8* keys)
 {
   // if (keys[SDL_SCANCODE_RETURN])
@@ -70,14 +77,18 @@ void Game::loop()
           {
           case SDLK_RETURN:
             printf("start\n");
-            this->nouvelle_piece = true;
-            this->yatilUnePieceDansLavion = true;
+            if(!this->yatilUnePieceDansLavion) {
+              this->nouvelle_piece = true;
+              this->yatilUnePieceDansLavion = true;
+            }
             break;
           case SDLK_LEFT:
-            this->piece_courante.gauche(w);
+            if(this->yatilUnePieceDansLavion)
+              this->piece_courante.gauche(w, this->grille);
             break;
           case SDLK_RIGHT:
-            this->piece_courante.droite(w);
+            if(this->yatilUnePieceDansLavion)
+              this->piece_courante.droite(w, this->grille);
             break;
           default:
             break;
@@ -101,7 +112,14 @@ void Game::loop()
     }
 
     //actualise la position des boxies
-    this->piece_courante.chuter(h);
+    bool puisJeTomber = this->piece_courante.chuter(h,this->grille);
+    if(!puisJeTomber) {
+      // on ajoute la pièce courante au mur
+      this->addPieceToTheGrille();
+      // std::cout << "nan\n";
+      // on dit que y a plus de pièce du coup
+      this->yatilUnePieceDansLavion = false;
+    }
 
     // gestion des bords
     // this->piece_courante->isPieceOnTheGrille(this->grille);

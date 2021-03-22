@@ -12,12 +12,14 @@ class Piece
         Piece();
         //Piece(int motif, int color);
         std::vector<Boxies> *get_boxies();
-        void chuter(int hauteur);
-        void gauche(int largeur);
-        void droite(int largeur);
-        // bool isPieceOnTheBorder(std::vector<Boxies> grille);
+        bool chuter(int hauteur, std::vector<Boxies> grille);
+        void gauche(int largeur, std::vector<Boxies> grille);
+        void droite(int largeur, std::vector<Boxies> grille);
+        // verif
         bool isPieceOnTheBorderX(int largeur);
         bool isPieceOnTheBorderY(int hauteur);
+        bool isPieceOnTheGrilleX(std::vector<Boxies> grille);
+        bool isPieceOnTheGrilleY(std::vector<Boxies> grille);
 
     protected:
         bool estPose;

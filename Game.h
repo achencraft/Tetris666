@@ -24,6 +24,7 @@ class Game
         bool drodroite;
 
         // methodes
+        void addPieceToTheGrille();
         void verificationLignes();
         bool verificationFinJeu();
 
