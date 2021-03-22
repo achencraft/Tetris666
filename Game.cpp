@@ -105,6 +105,7 @@ void Game::loop()
               // std::cout << "Début de la partie\n";
               this->yatilUnePieceDansLavion = true;
               this->ZePartiiii = true;
+              this->JustSpawned = true;
             }
             break;
           case SDLK_LEFT:
@@ -115,11 +116,12 @@ void Game::loop()
             if(this->yatilUnePieceEnTrainDeTomber)
               this->piece_courante.droite(largeur_grille, this->grille);
             break;
-        case SDLK_DOWN:
+          case SDLK_DOWN:
             delai_chute = 1000;
             break;
-        case SDLK_SPACE:
-            this->piece_courante.rotation(largeur_grille, hauteur_grille, this->grille);
+          case SDLK_SPACE:
+            if(!JustSpawned)
+              this->piece_courante.rotation(largeur_grille, hauteur_grille, this->grille);
             break;
           default:
             break;
@@ -152,9 +154,11 @@ void Game::loop()
       // std::cout << "Création d'une pièce\n";
       this->yatilUnePieceDansLavion = false;
       this->yatilUnePieceEnTrainDeTomber = true;
+      this->JustSpawned = true;
     }
 
     if (currentTime > lastTime + delai_chute) {
+        JustSpawned = false;
         //actualise la position des boxies
         bool puisJeTomber = this->piece_courante.chuter(hauteur_grille,this->grille);
         // si on a pas le droit de tomber

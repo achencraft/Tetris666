@@ -19,6 +19,7 @@ class Game
         bool yatilUnePieceDansLavion;
         bool yatilUnePieceEnTrainDeTomber;
         bool ZePartiiii;
+        bool JustSpawned;
         int score;
         int largeur_grille;
         int hauteur_grille;
