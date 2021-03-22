@@ -19,7 +19,8 @@ class Piece
         bool isPieceOnTheBorderLeft(int largeur);
         bool isPieceOnTheBorderRight(int largeur);
         bool isPieceOnTheBorderY(int hauteur);
-        bool isPieceOnTheGrilleX(std::vector<Boxies> grille);
+        bool isPieceOnTheGrilleLeft(std::vector<Boxies> grille);
+        bool isPieceOnTheGrilleRight(std::vector<Boxies> grille);
         bool isPieceOnTheGrilleY(std::vector<Boxies> grille);
 
     protected:
