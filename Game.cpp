@@ -7,6 +7,7 @@ void Game::init()
   win->ajouter_sprite("fond",Sprite({0,0,299,499}));
   win->ajouter_sprite("boxi",Sprite({299,0,40,40}));
   yatilUnePieceDansLavion = false;
+  
 }
 
 void Game::addPieceToTheGrille() {
@@ -76,9 +77,15 @@ void Game::loop()
   int w, h;
   this->win->get_dimension(&h,&w);
 
+  int hauteur_grille = h/win->sprites.at("boxi").get()->h;
+  int largeur_grille = (w-200)/win->sprites.at("boxi").get()->w;
+
+  //gestion du temps
+  unsigned int lastTime = 0, currentTime, delai_chute = 1000;
 
   while(!quit)
   {
+    currentTime = SDL_GetTicks();
 
     SDL_Event event;
     while (!quit && SDL_PollEvent(&event))
@@ -103,11 +110,11 @@ void Game::loop()
             break;
           case SDLK_LEFT:
             if(this->yatilUnePieceDansLavion)
-              this->piece_courante.gauche(w, this->grille);
+              this->piece_courante.gauche(largeur_grille, this->grille);
             break;
           case SDLK_RIGHT:
             if(this->yatilUnePieceDansLavion)
-              this->piece_courante.droite(w, this->grille);
+              this->piece_courante.droite(largeur_grille, this->grille);
             break;
           default:
             break;
@@ -130,14 +137,20 @@ void Game::loop()
       this->nouvelle_piece = false;
     }
 
-    //actualise la position des boxies
-    bool puisJeTomber = this->piece_courante.chuter(h,this->grille);
-    if(!puisJeTomber) {
-      // on ajoute la pièce courante au mur
-      this->addPieceToTheGrille();
-      // std::cout << "nan\n";
-      // on dit que y a plus de pièce du coup
-      this->yatilUnePieceDansLavion = false;
+    if (currentTime > lastTime + delai_chute) { 
+    
+
+        //actualise la position des boxies
+        bool puisJeTomber = this->piece_courante.chuter(hauteur_grille,this->grille);
+        if(!puisJeTomber) {
+        // on ajoute la pièce courante au mur
+        this->addPieceToTheGrille();
+        // std::cout << "nan\n";
+        // on dit que y a plus de pièce du coup
+        this->yatilUnePieceDansLavion = false;
+        }
+
+        lastTime = currentTime;
     }
 
     // gestion des bords

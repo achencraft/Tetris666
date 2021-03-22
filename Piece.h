@@ -16,12 +16,14 @@ class Piece
         void gauche(int largeur, std::vector<Boxies> grille);
         void droite(int largeur, std::vector<Boxies> grille);
         // verif
-        bool isPieceOnTheBorderX(int largeur);
+        bool isPieceOnTheBorderLeft(int largeur);
+        bool isPieceOnTheBorderRight(int largeur);
         bool isPieceOnTheBorderY(int hauteur);
         bool isPieceOnTheGrilleX(std::vector<Boxies> grille);
         bool isPieceOnTheGrilleY(std::vector<Boxies> grille);
 
     protected:
+
         bool estPose;
         int orientation;
         std::vector<int> color;
