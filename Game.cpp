@@ -7,7 +7,8 @@ void Game::init()
   win->ajouter_sprite("fond",Sprite({0,0,299,499}));
   win->ajouter_sprite("boxi",Sprite({299,0,40,40}));
   yatilUnePieceDansLavion = false;
-  
+  ZePartiiii = false;
+  yatilUnePieceEnTrainDeTomber = false;
 }
 
 void Game::addPieceToTheGrille() {
@@ -35,17 +36,14 @@ void Game::draw()
   {
     for(j = 0; j < hauteur; j+=srcFond->h)
     {
-        SDL_Rect dest = { i,j,0,0 };  
+        SDL_Rect dest = { i,j,0,0 };
         SDL_BlitSurface(win->plancheSprites, srcFond, win->win_surf, &dest);
-    }  
+    }
   }
-  
-  
 
   //placer les boxies
-  
-  
-  for (size_t i = 0; i < this->grille.size(); i++) {    
+
+  for (size_t i = 0; i < this->grille.size(); i++) {
     Boxies boxi = this->grille[i];
     SDL_Rect *srcBoxie= win->sprites.at(boxi.get_sprite()).get();
 
@@ -53,18 +51,18 @@ void Game::draw()
     SDL_BlitSurface(win->plancheSprites, srcBoxie, win->win_surf, &destBoxie);
   }
 
-  if(yatilUnePieceDansLavion) {
+  if(yatilUnePieceEnTrainDeTomber) {
     std::vector<Boxies> *piece = piece_courante.get_boxies();
     for (size_t i = 0; i < piece->size(); i++) {
       // int x = int(piece->at(i).get_x());
       // int y = int(piece->at(i).get_y());
       // std::cout << "x = " << x << ", y = " << y << "\n";
-      
+
       Boxies boxi = piece->at(i);
-      SDL_Rect *srcBoxie= win->sprites.at("boxi").get();      
+      SDL_Rect *srcBoxie= win->sprites.at("boxi").get();
 
       SDL_Rect destBoxie = { int(srcBoxie->w*piece->at(i).get_x()), int(srcBoxie->h*piece->at(i).get_y()), 0, 0 };
-      
+
       SDL_BlitSurface(win->plancheSprites, srcBoxie, win->win_surf, &destBoxie);
     }
   }
@@ -103,18 +101,18 @@ void Game::loop()
           switch (event.key.keysym.sym)
           {
           case SDLK_RETURN:
-            printf("start\n");
-            if(!this->yatilUnePieceDansLavion) {
-              this->nouvelle_piece = true;
+            if(!this->ZePartiiii) {
+              // std::cout << "Début de la partie\n";
               this->yatilUnePieceDansLavion = true;
+              this->ZePartiiii = true;
             }
             break;
           case SDLK_LEFT:
-            if(this->yatilUnePieceDansLavion)
+            if(this->yatilUnePieceEnTrainDeTomber)
               this->piece_courante.gauche(largeur_grille, this->grille);
             break;
           case SDLK_RIGHT:
-            if(this->yatilUnePieceDansLavion)
+            if(this->yatilUnePieceEnTrainDeTomber)
               this->piece_courante.droite(largeur_grille, this->grille);
             break;
         case SDLK_DOWN:
@@ -146,26 +144,27 @@ void Game::loop()
 		keyboard(state);
     quit |= (state[SDL_SCANCODE_ESCAPE]!=0);
 
-    //nouvelle pièce
-    if(this->nouvelle_piece)
+    //nouvelle pièce si la dernière pièce a été posée
+    if(this->yatilUnePieceDansLavion)
     {
       Piece p = Piece();
       this->piece_courante = p;
-      std::cout << "nouvelle pièce!!!\n";
-      this->nouvelle_piece = false;
+      // std::cout << "Création d'une pièce\n";
+      this->yatilUnePieceDansLavion = false;
+      this->yatilUnePieceEnTrainDeTomber = true;
     }
 
-    if (currentTime > lastTime + delai_chute) { 
-    
-
+    if (currentTime > lastTime + delai_chute) {
         //actualise la position des boxies
         bool puisJeTomber = this->piece_courante.chuter(hauteur_grille,this->grille);
+        // si on a pas le droit de tomber
         if(!puisJeTomber) {
-        // on ajoute la pièce courante au mur
-        this->addPieceToTheGrille();
-        // std::cout << "nan\n";
-        // on dit que y a plus de pièce du coup
-        this->yatilUnePieceDansLavion = false;
+          // on ajoute la pièce courante au mur
+          this->addPieceToTheGrille();
+          // on dit que y a plus de pièce du coup
+          this->yatilUnePieceDansLavion = true;
+          this->yatilUnePieceEnTrainDeTomber = false;
+          // std::cout << "La pièce a été posé\n";
         }
 
         lastTime = currentTime;
@@ -180,7 +179,7 @@ void Game::loop()
     // affiche la surface
     SDL_UpdateWindowSurface(win->window);
 
- 
+
   }
 
   SDL_Quit();
