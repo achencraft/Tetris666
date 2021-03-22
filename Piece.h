@@ -15,6 +15,8 @@ class Piece
         bool chuter(int hauteur, std::vector<Boxies> grille);
         void gauche(int largeur, std::vector<Boxies> grille);
         void droite(int largeur, std::vector<Boxies> grille);
+        void rotation(int largeur, int hauteur, std::vector<Boxies> grille);
+        void poser();
         // verif
         bool isPieceOnTheBorderLeft(int largeur);
         bool isPieceOnTheBorderRight(int largeur);
@@ -22,17 +24,17 @@ class Piece
         bool isPieceOnTheGrilleLeft(std::vector<Boxies> grille);
         bool isPieceOnTheGrilleRight(std::vector<Boxies> grille);
         bool isPieceOnTheGrilleY(std::vector<Boxies> grille);
+        bool isRotaValid(int largeur, int hauteur, std::vector<Boxies> grille);
 
     protected:
 
         bool estPose;
-        int orientation;
         std::vector<int> color;
         std::vector<Boxies> boxies;
 
         // methode
-        void changerOrientation(int nouvelle_orientation);
-        void poser();
+        void get_piece_dim(int *h, int *w, int *x, int *y);
+        
 };
 
 

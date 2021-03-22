@@ -11,6 +11,7 @@ void Game::init()
 }
 
 void Game::addPieceToTheGrille() {
+  this->piece_courante.poser();
   std::vector<Boxies> *piece = this->piece_courante.get_boxies();
   for (size_t i = 0; i < piece->size(); i++) {
     this->grille.insert(this->grille.end(),piece->at(i));
@@ -118,6 +119,9 @@ void Game::loop()
             break;
         case SDLK_DOWN:
             delai_chute = 1000;
+            break;
+        case SDLK_SPACE:
+            this->piece_courante.rotation(largeur_grille, hauteur_grille, this->grille);
             break;
           default:
             break;

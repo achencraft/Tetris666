@@ -14,6 +14,10 @@ class Boxies {
         //méthodes
         int get_x();
         int get_y();
+        int get_tx();
+        int get_ty();
+        void confirm_tmp_pos();
+        void set_temp_pos(int x, int y);
         // getter
         std::string get_sprite();
         // déplacement
@@ -25,6 +29,8 @@ class Boxies {
         std::string sprite;
         int x;
         int y;
+        int tmp_x;
+        int tmp_y;
 };
 
 
