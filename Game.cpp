@@ -3,7 +3,7 @@
 
 void Game::init()
 {
-  win = new WindowSurface("Tetris666",400,500);
+  win = new WindowSurface("Tetris666",800,1000);
   win->ajouter_sprite("fond",Sprite({0,0,299,499}));
   win->ajouter_sprite("boxi",Sprite({299,0,40,40}));
   yatilUnePieceDansLavion = false;
@@ -17,15 +17,30 @@ void Game::keyboard(const Uint8* keys)
 
 void Game::draw()
 {
+  int hauteur, largeur, i, j;
+  win->get_dimension(&hauteur,&largeur);
+
   // récupération sprite fond
-  SDL_Rect dest = { 0,0,0,0 };
   SDL_Rect *srcFond = win->sprites.at("fond").get();
-  SDL_BlitSurface(win->plancheSprites, srcFond, win->win_surf, &dest);
+  for(i = largeur-200-srcFond->w; i > (-1)*srcFond->w; i-=srcFond->w)
+  {
+    for(j = 0; j < hauteur; j+=srcFond->h)
+    {
+        SDL_Rect dest = { i,j,0,0 };  
+        SDL_BlitSurface(win->plancheSprites, srcFond, win->win_surf, &dest);
+    }  
+  }
+  
+  
 
   //placer les boxies
-  for (size_t i = 0; i < this->grille.size(); i++) {
-    SDL_Rect destBoxie = { int(this->grille[i].get_x()), int(this->grille[i].get_y()), 0, 0 };
-    SDL_Rect *srcBoxie= win->sprites.at(this->grille[i].get_sprite()).get();
+  
+  
+  for (size_t i = 0; i < this->grille.size(); i++) {    
+    Boxies boxi = this->grille[i];
+    SDL_Rect *srcBoxie= win->sprites.at(boxi.get_sprite()).get();
+
+    SDL_Rect destBoxie = { srcBoxie->w*int(boxi.get_x()), srcBoxie->h*int(boxi.get_y()), 0, 0 };
     SDL_BlitSurface(win->plancheSprites, srcBoxie, win->win_surf, &destBoxie);
   }
 
@@ -35,8 +50,12 @@ void Game::draw()
       // int x = int(piece->at(i).get_x());
       // int y = int(piece->at(i).get_y());
       // std::cout << "x = " << x << ", y = " << y << "\n";
-      SDL_Rect destBoxie = { int(piece->at(i).get_x()), int(piece->at(i).get_y()), 0, 0 };
-      SDL_Rect *srcBoxie= win->sprites.at(piece->at(i).get_sprite()).get();
+      
+      Boxies boxi = piece->at(i);
+      SDL_Rect *srcBoxie= win->sprites.at("boxi").get();      
+
+      SDL_Rect destBoxie = { int(srcBoxie->w*piece->at(i).get_x()), int(srcBoxie->h*piece->at(i).get_y()), 0, 0 };
+      
       SDL_BlitSurface(win->plancheSprites, srcBoxie, win->win_surf, &destBoxie);
     }
   }
@@ -111,6 +130,8 @@ void Game::loop()
 
     // affiche la surface
     SDL_UpdateWindowSurface(win->window);
+
+ 
   }
 
   SDL_Quit();

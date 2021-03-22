@@ -7,6 +7,8 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <thread>
+#include <chrono>
 
 class Game
 {

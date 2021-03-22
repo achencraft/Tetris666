@@ -5,7 +5,7 @@ Piece::Piece() {
     int orientation = 0;
 
     //on créé un seul boxi pour l'instant
-    Boxies b = Boxies("boxi",5,5);
+    Boxies b = Boxies("boxi",0,0);
     boxies.insert(boxies.end(),b);
 }
 

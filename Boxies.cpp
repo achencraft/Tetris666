@@ -27,12 +27,12 @@ void Boxies::chuter()
 
 void Boxies::gauche()
 {
-  x = x - 5;
+  x = x - 1;
   std::cout << "x = " << this->x << "\n";
 }
 
 void Boxies::droite()
 {
-  x = x + 5;
+  x = x + 1;
   std::cout << "x = " << this->x << "\n";
 }
