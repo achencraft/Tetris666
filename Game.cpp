@@ -6,6 +6,7 @@ void Game::init()
   win = new WindowSurface("Tetris666",800,1000);
   win->ajouter_sprite("fond",Sprite({0,0,299,499}));
   win->ajouter_sprite("boxi",Sprite({299,0,40,40}));
+  score = 0;
   yatilUnePieceDansLavion = false;
   ZePartiiii = false;
   yatilUnePieceEnTrainDeTomber = false;
@@ -17,6 +18,60 @@ void Game::addPieceToTheGrille() {
   for (size_t i = 0; i < piece->size(); i++) {
     this->grille.insert(this->grille.end(),piece->at(i));
   }
+}
+
+void Game::verificationLignes() {
+  // tableau qui pour chaque ligne dit combien y a de boxies
+  int fautTilDetruireLeMur[this->hauteur_grille];
+  for (size_t i = 0; i < this->hauteur_grille; i++) {
+    fautTilDetruireLeMur[i] = 0;
+  }
+  // on remplit le tableau du coup
+  for (size_t i = 0; i < this->grille.size(); i++) {
+    Boxies boxi = this->grille[i];
+    fautTilDetruireLeMur[boxi.get_y()]++;
+  }
+
+  // on regarde chaque ligne
+  for (size_t i = 0; i < this->hauteur_grille; i++) {
+    // si y a autant de boxi que y a de place
+    if(fautTilDetruireLeMur[i] == this->largeur_grille) {
+      this->score += 100;
+      std::cout << "Score = " << this->score << "\n";
+      // ON DETRUIT
+      int tailleMur = this->grille.size();
+      int idx = 0;
+      while(idx < tailleMur) {
+        if(this->grille[idx].get_y() == i) {
+          this->grille.erase(this->grille.begin()+idx);
+          tailleMur = this->grille.size();
+        }
+        else {
+          idx++;
+        }
+      }
+      // ET ON DESCEND TOUT LE RESTE DU MUR!!!
+      for (size_t b = 0; b < this->grille.size(); b++) {
+        if(this->grille[b].get_y() < i) {
+          this->grille[b].chuter();
+        }
+      }
+    }
+  }
+}
+
+bool Game::verificationFinJeu() {
+  // on parcourt les picèes en partant de la fin
+  // on trouvera plus vite si la dernière posée est perdante ou pas
+  // à terme on pourrait juste checker le nombre max de bloc que peut faire une pièce
+  int i = this->grille.size()-1;
+  while(i>=0) {
+    if(this->grille[i].get_y() == 0) {
+      return true;
+    }
+    i--;
+  }
+  return false;
 }
 
 void Game::keyboard(const Uint8* keys)
@@ -78,6 +133,9 @@ void Game::loop()
 
   int hauteur_grille = h/win->sprites.at("boxi").get()->h;
   int largeur_grille = (w-200)/win->sprites.at("boxi").get()->w;
+
+  this->hauteur_grille = hauteur_grille;
+  this->largeur_grille = largeur_grille;
 
   //gestion du temps
   unsigned int lastTime = 0, currentTime, delai_chute = 1000;
@@ -168,7 +226,8 @@ void Game::loop()
           // on dit que y a plus de pièce du coup
           this->yatilUnePieceDansLavion = true;
           this->yatilUnePieceEnTrainDeTomber = false;
-          // std::cout << "La pièce a été posé\n";
+          this->verificationLignes();
+          quit = this->verificationFinJeu();
         }
 
         lastTime = currentTime;
@@ -182,7 +241,6 @@ void Game::loop()
 
     // affiche la surface
     SDL_UpdateWindowSurface(win->window);
-
 
   }
 
