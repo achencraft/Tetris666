@@ -10,7 +10,7 @@ class Piece
 {
     public:
         Piece();
-        //Piece(int motif, int color);
+        Piece(std::vector<Boxies> motif, int color, int largeur);
         std::vector<Boxies> *get_boxies();
         bool chuter(int hauteur, std::vector<Boxies> grille);
         void gauche(int largeur, std::vector<Boxies> grille);
@@ -34,6 +34,8 @@ class Piece
 
         // methode
         void get_piece_dim(int *h, int *w, int *x, int *y);
+
+
         
 };
 

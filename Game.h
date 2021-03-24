@@ -24,11 +24,14 @@ class Game
         int largeur_grille;
         int hauteur_grille;
         std::vector<Boxies> grille;
+        std::vector<std::vector<Boxies>> liste_pieces;
 
         // methodes
         void addPieceToTheGrille();
         void verificationLignes();
         bool verificationFinJeu();
+        Piece nouvelle_piece();
+        void creer_pieces();
 
 
 

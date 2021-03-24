@@ -6,10 +6,18 @@ void Game::init()
   win = new WindowSurface("Tetris666",800,1000);
   win->ajouter_sprite("fond",Sprite({0,0,299,499}));
   win->ajouter_sprite("boxi",Sprite({299,0,40,40}));
+  creer_pieces();
   score = 0;
   yatilUnePieceDansLavion = false;
   ZePartiiii = false;
   yatilUnePieceEnTrainDeTomber = false;
+}
+
+Piece Game::nouvelle_piece()
+{
+    int piece_id = rand() % 7; //entre 0 et 6 inclus  
+    Piece p = Piece(this->liste_pieces.at(piece_id),0,largeur_grille);
+    return p;
 }
 
 void Game::addPieceToTheGrille() {
@@ -65,7 +73,7 @@ bool Game::verificationFinJeu() {
   // on trouvera plus vite si la dernière posée est perdante ou pas
   // à terme on pourrait juste checker le nombre max de bloc que peut faire une pièce
   int i = this->grille.size()-1;
-  while(i>=0) {
+  while(i >= 0) {
     if(this->grille[i].get_y() == 0) {
       return true;
     }
@@ -207,7 +215,7 @@ void Game::loop()
     //nouvelle pièce si la dernière pièce a été posée
     if(this->yatilUnePieceDansLavion)
     {
-      Piece p = Piece();
+      Piece p = this->nouvelle_piece();
       this->piece_courante = p;
       // std::cout << "Création d'une pièce\n";
       this->yatilUnePieceDansLavion = false;
@@ -258,4 +266,65 @@ int main(int argc, char** argv)
   Game g;
   g.init();
   g.loop();
+}
+
+
+void Game::creer_pieces()
+{
+    std::vector<Boxies> boxi_tab;
+    
+    //Pièce Carrée 0
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,0));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
+    liste_pieces.insert(liste_pieces.end(),boxi_tab);
+    boxi_tab.clear();
+
+    //Pièce L 1
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,0));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",2,0));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",2,1));
+    liste_pieces.insert(liste_pieces.end(),boxi_tab);
+    boxi_tab.clear();
+
+    //Pièce L inversé 2
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",2,1));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",2,0));
+    liste_pieces.insert(liste_pieces.end(),boxi_tab);
+    boxi_tab.clear();
+
+    //Pièce S 3
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,2));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,0));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
+    liste_pieces.insert(liste_pieces.end(),boxi_tab);
+    boxi_tab.clear();
+
+    //Pièce Z 4
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,2));
+    liste_pieces.insert(liste_pieces.end(),boxi_tab);
+    boxi_tab.clear();
+
+    //Pièce I 5
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,2));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,3));
+    liste_pieces.insert(liste_pieces.end(),boxi_tab);
+    boxi_tab.clear();
+
+    //Pièce T 6
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,2));
+    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
+    liste_pieces.insert(liste_pieces.end(),boxi_tab);
 }

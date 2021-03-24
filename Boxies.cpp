@@ -57,3 +57,8 @@ void Boxies::droite()
   x = x + 1;
   //std::cout << "x = " << this->x << "\n";
 }
+
+void Boxies::set_pos_x(int xx)
+{
+    x = x + xx;
+}

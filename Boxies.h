@@ -18,6 +18,7 @@ class Boxies {
         int get_ty();
         void confirm_tmp_pos();
         void set_temp_pos(int x, int y);
+        void set_pos_x(int x);
         // getter
         std::string get_sprite();
         // déplacement
