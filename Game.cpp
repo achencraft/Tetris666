@@ -22,7 +22,7 @@ Piece Game::nouvelle_piece()
 
 void Game::addPieceToTheGrille() {
   this->piece_courante.poser();
-  std::vector<Boxies> *piece = this->piece_courante.get_boxies();
+  std::vector<Boxi> *piece = this->piece_courante.get_boxies();
   for (size_t i = 0; i < piece->size(); i++) {
     this->grille.insert(this->grille.end(),piece->at(i));
   }
@@ -36,7 +36,7 @@ void Game::verificationLignes() {
   }
   // on remplit le tableau du coup
   for (size_t i = 0; i < this->grille.size(); i++) {
-    Boxies boxi = this->grille[i];
+    Boxi boxi = this->grille[i];
     fautTilDetruireLeMur[boxi.get_y()]++;
   }
 
@@ -92,6 +92,11 @@ void Game::draw()
 {
   int hauteur, largeur, i, j;
   win->get_dimension(&hauteur,&largeur);
+ 
+  //on efface la fenêtre
+  SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
+  SDL_RenderClear(win->renderer);
+  
 
   // récupération sprite fond
   SDL_Rect *srcFond = win->sprites.at("fond").get();
@@ -99,36 +104,45 @@ void Game::draw()
   {
     for(j = 0; j < hauteur; j+=srcFond->h)
     {
-        SDL_Rect dest = { i,j,0,0 };
-        SDL_BlitSurface(win->plancheSprites, srcFond, win->win_surf, &dest);
+        SDL_Rect dest = {i,j,srcFond->w,srcFond->h};
+        SDL_RenderCopy(win->renderer,win->pTexture,srcFond,&dest);
     }
   }
 
-  //placer les boxies
 
+
+
+  //placer les boxies placés
   for (size_t i = 0; i < this->grille.size(); i++) {
-    Boxies boxi = this->grille[i];
+    Boxi boxi = this->grille[i];
     SDL_Rect *srcBoxie= win->sprites.at(boxi.get_sprite()).get();
-
-    SDL_Rect destBoxie = { srcBoxie->w*int(boxi.get_x()), srcBoxie->h*int(boxi.get_y()), 0, 0 };
-    SDL_BlitSurface(win->plancheSprites, srcBoxie, win->win_surf, &destBoxie);
+    SDL_Rect destBoxie = { srcBoxie->w*int(boxi.get_x()), srcBoxie->h*int(boxi.get_y()), srcBoxie->w, srcBoxie->h };
+    SDL_RenderCopy(win->renderer,win->pTexture,srcBoxie,&destBoxie);
   }
 
+  //placer la pièce qui tombe
   if(yatilUnePieceEnTrainDeTomber) {
-    std::vector<Boxies> *piece = piece_courante.get_boxies();
+    std::vector<Boxi> *piece = piece_courante.get_boxies();
     for (size_t i = 0; i < piece->size(); i++) {
-      // int x = int(piece->at(i).get_x());
-      // int y = int(piece->at(i).get_y());
-      // std::cout << "x = " << x << ", y = " << y << "\n";
-
-      Boxies boxi = piece->at(i);
+      Boxi boxi = piece->at(i);
       SDL_Rect *srcBoxie= win->sprites.at("boxi").get();
-
-      SDL_Rect destBoxie = { int(srcBoxie->w*piece->at(i).get_x()), int(srcBoxie->h*piece->at(i).get_y()), 0, 0 };
-
-      SDL_BlitSurface(win->plancheSprites, srcBoxie, win->win_surf, &destBoxie);
+      SDL_Rect destBoxie = { int(srcBoxie->w*piece->at(i).get_x()), int(srcBoxie->h*piece->at(i).get_y()), srcBoxie->w, srcBoxie->h };
+      SDL_RenderCopy(win->renderer,win->pTexture,srcBoxie,&destBoxie);
     }
   }
+
+  //placer colonne droite
+  SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
+  SDL_Rect rightcol = { largeur-200, 0, 200, hauteur};
+  SDL_RenderFillRect(win->renderer,&rightcol);
+
+  /*SDL_Color color = { 255, 255, 255 };
+  SDL_Surface * surface = TTF_RenderText_Solid(win->font,"Tetris666", color);
+  SDL_Texture * texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+  SDL_Rect dstrect = { 0, 0, 10, 10 };
+  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  */
+
 
 }
 
@@ -248,7 +262,8 @@ void Game::loop()
     this->draw();
 
     // affiche la surface
-    SDL_UpdateWindowSurface(win->window);
+    SDL_RenderPresent(win->renderer);
+    //SDL_UpdateWindowSurface(win->window);
 
   }
 
@@ -257,7 +272,7 @@ void Game::loop()
 
 int main(int argc, char** argv)
 {
-  if(SDL_Init(SDL_INIT_VIDEO) != 0)
+  if(SDL_Init(SDL_INIT_VIDEO) != 0 || TTF_Init() != 0)
   {
     return 1;
   }
@@ -271,60 +286,60 @@ int main(int argc, char** argv)
 
 void Game::creer_pieces()
 {
-    std::vector<Boxies> boxi_tab;
+    std::vector<Boxi> boxi_tab;
     
     //Pièce Carrée 0
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,0));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce L 1
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,0));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",2,0));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",2,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,1));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce L inversé 2
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",2,1));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",2,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,0));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce S 3
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,2));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,0));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,2));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce Z 4
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,2));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,2));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce I 5
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,2));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,3));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,2));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,3));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce T 6
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",0,2));
-    boxi_tab.insert(boxi_tab.end(),Boxies("boxi",1,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,2));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
 }

@@ -2,7 +2,7 @@
 #define _GAME_H_
 
 #include "WindowSurface.h"
-#include "Boxies.h"
+#include "Boxi.h"
 #include "Piece.h"
 #include <iostream>
 #include <vector>
@@ -23,8 +23,8 @@ class Game
         int score;
         int largeur_grille;
         int hauteur_grille;
-        std::vector<Boxies> grille;
-        std::vector<std::vector<Boxies>> liste_pieces;
+        std::vector<Boxi> grille;
+        std::vector<std::vector<Boxi>> liste_pieces;
 
         // methodes
         void addPieceToTheGrille();

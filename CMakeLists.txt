@@ -1,36 +1,24 @@
-cmake_minimum_required(VERSION 3.7)
-include( CMakeParseArguments )
+project(Tetris666)
 
-project(TP1_ProgAv LANGUAGES CXX)
+cmake_minimum_required(VERSION 3.7)
 
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
+
+add_executable(Tetris666 Game.cpp Game.h Boxi.cpp Boxi.h Piece.cpp Piece.h Sprite.cpp Sprite.h WindowSurface.cpp WindowSurface.h)
+
+
+# Add SDL2 CMake modules
+list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
+
+# Add SDL2 library
 find_package(SDL2 REQUIRED)
+target_link_libraries(${PROJECT_NAME} SDL2::Main)
 
-function(ADD_PRG)
-	set(options OPTIONAL)
-	set(oneValueArgs TARGET )
-	set(multiValueArgs SOURCES)
-	cmake_parse_arguments(ADD_PRG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN} )
-
-	add_executable(${ADD_PRG_TARGET} "")
-	target_sources(${ADD_PRG_TARGET} PUBLIC ${ADD_PRG_SOURCES})
-	if (${CMAKE_SYSTEM_NAME} MATCHES Linux)
-		target_include_directories(${ADD_PRG_TARGET} PUBLIC /usr/include/SDL2)
-		target_link_libraries(${ADD_PRG_TARGET} PUBLIC SDL2 SDL2main)
-	else()
-		target_link_libraries(${ADD_PRG_TARGET} PUBLIC SDL2::SDL2 SDL2::SDL2main)
-	endif()
-	target_compile_definitions(${ADD_PRG_TARGET} PUBLIC _USE_MATH_DEFINES)
-endfunction()
+# Add SDL2_ttf library
+find_package(SDL2_ttf REQUIRED)
+target_link_libraries(${PROJECT_NAME} SDL2::TTF)
 
 
-
-ADD_PRG(TARGET TETRIS666 SOURCES Game.cpp Game.h Boxies.cpp Boxies.h Piece.cpp Piece.h Sprite.cpp Sprite.h WindowSurface.cpp WindowSurface.h)
-
-
-
-file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/sprite.bmp
-	DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/)
-
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2TFF_INCLUDE_DIRS})

@@ -1,15 +1,15 @@
-#ifndef _BOXIES_H_
-#define _BOXIES_H_
+#ifndef _BOXI_H_
+#define _BOXI_H_
 
 #include <SDL.h>
 #include <string>
 #include <iostream>
 
-class Boxies {
+class Boxi {
     public:
         // constructeur
-        Boxies();
-        Boxies(std::string s, int x, int y);
+        Boxi();
+        Boxi(std::string s, int x, int y);
 
         //méthodes
         int get_x();
