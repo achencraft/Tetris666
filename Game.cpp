@@ -1,7 +1,7 @@
 #include "Game.h"
 
 
-void Game::init()
+void Game::init(int largeur_grille, int hauteur_grille)
 {
   win = new WindowSurface("Tetris666",800,1000);
   win->ajouter_sprite("fond",Sprite({0,0,299,499}));
@@ -11,6 +11,9 @@ void Game::init()
   yatilUnePieceDansLavion = false;
   ZePartiiii = false;
   yatilUnePieceEnTrainDeTomber = false;
+
+  this->hauteur_grille = hauteur_grille;
+  this->largeur_grille = largeur_grille;
 }
 
 Piece Game::nouvelle_piece()
@@ -82,16 +85,12 @@ bool Game::verificationFinJeu() {
   return false;
 }
 
-void Game::keyboard(const Uint8* keys)
-{
-  // if (keys[SDL_SCANCODE_RETURN])
-  //   std::cout<< "<RETURN> is pressed."<< std::endl;
-}
 
-void Game::draw()
+
+void Game::draw(int largeur, int hauteur)
 {
-  int hauteur, largeur, i, j;
-  win->get_dimension(&hauteur,&largeur);
+  int i, j, taille_boxi;
+  taille_boxi = hauteur/hauteur_grille;
  
   //on efface la fenêtre
   SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
@@ -109,15 +108,10 @@ void Game::draw()
     }
   }
 
-
-
-
   //placer les boxies placés
   for (size_t i = 0; i < this->grille.size(); i++) {
     Boxi boxi = this->grille[i];
-    SDL_Rect *srcBoxie= win->sprites.at(boxi.get_sprite()).get();
-    SDL_Rect destBoxie = { srcBoxie->w*int(boxi.get_x()), srcBoxie->h*int(boxi.get_y()), srcBoxie->w, srcBoxie->h };
-    SDL_RenderCopy(win->renderer,win->pTexture,srcBoxie,&destBoxie);
+    draw_boxi(boxi.get_x(), boxi.get_y(), taille_boxi);
   }
 
   //placer la pièce qui tombe
@@ -125,9 +119,7 @@ void Game::draw()
     std::vector<Boxi> *piece = piece_courante.get_boxies();
     for (size_t i = 0; i < piece->size(); i++) {
       Boxi boxi = piece->at(i);
-      SDL_Rect *srcBoxie= win->sprites.at("boxi").get();
-      SDL_Rect destBoxie = { int(srcBoxie->w*piece->at(i).get_x()), int(srcBoxie->h*piece->at(i).get_y()), srcBoxie->w, srcBoxie->h };
-      SDL_RenderCopy(win->renderer,win->pTexture,srcBoxie,&destBoxie);
+      draw_boxi(piece->at(i).get_x(), piece->at(i).get_y(), taille_boxi);
     }
   }
 
@@ -146,18 +138,21 @@ void Game::draw()
 
 }
 
+void Game::draw_boxi(int x, int y, int taille)
+{
+    SDL_Rect dest = { taille*x, taille*y, taille, taille };
+    SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
+    SDL_RenderFillRect(win->renderer,&dest);
+    SDL_SetRenderDrawColor(win->renderer,209,0,127,255);
+    SDL_RenderDrawRect(win->renderer,&dest);
+}
+
 void Game::loop()
 {
 
   bool quit = false;
   int w, h;
   this->win->get_dimension(&h,&w);
-
-  int hauteur_grille = h/win->sprites.at("boxi").get()->h;
-  int largeur_grille = (w-200)/win->sprites.at("boxi").get()->w;
-
-  this->hauteur_grille = hauteur_grille;
-  this->largeur_grille = largeur_grille;
 
   //gestion du temps
   unsigned int lastTime = 0, currentTime, delai_chute = 1000;
@@ -223,7 +218,6 @@ void Game::loop()
       }
     }
     const Uint8* state = SDL_GetKeyboardState(NULL);
-		keyboard(state);
     quit |= (state[SDL_SCANCODE_ESCAPE]!=0);
 
     //nouvelle pièce si la dernière pièce a été posée
@@ -259,7 +253,7 @@ void Game::loop()
     // this->piece_courante->isPieceOnTheGrille(this->grille);
 
     //génère l'affichage
-    this->draw();
+    this->draw(w,h);
 
     // affiche la surface
     SDL_RenderPresent(win->renderer);
@@ -279,7 +273,7 @@ int main(int argc, char** argv)
 
 
   Game g;
-  g.init();
+  g.init(15,25);
   g.loop();
 }
 

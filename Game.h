@@ -38,9 +38,9 @@ class Game
     public:
         inline Game():
             win(nullptr) {};
-        void init();
-        void draw();
-        void keyboard(const Uint8* keys);
+        void init(int largeur_grille, int hauteur_grille);
+        void draw(int largeur, int hauteur);
+        void draw_boxi(int x, int y, int taille);
         void loop();
 
 };
