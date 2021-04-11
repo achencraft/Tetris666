@@ -150,10 +150,6 @@ void Game::draw(int largeur, int hauteur)
     SDL_Rect dest = {i,j,srcTetris->w,srcTetris->h};
     SDL_RenderCopy(win->renderer,win->pTexture,srcTetris,&dest);
   }
-  // Bordure fenêtre de jeu
-  SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
-  SDL_Rect bordureSombre = { depart-50, 0, (largeurZoneJeu+140), hauteur};
-  SDL_RenderFillRect(win->renderer,&bordureSombre);
   // récupération sprite fond
   SDL_Rect *srcFond = win->sprites.at("pattern").get();
   for(i = depart; i < depart+largeurZoneJeu; i+=srcFond->w)
@@ -164,6 +160,13 @@ void Game::draw(int largeur, int hauteur)
         SDL_RenderCopy(win->renderer,win->pTexture,srcFond,&dest);
     }
   }
+  // Bordure fenêtre de jeu
+  SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
+  SDL_Rect bordureSombre = { depart-50, 0, 50, hauteur};
+  SDL_RenderFillRect(win->renderer,&bordureSombre);
+  bordureSombre = { depart+largeurZoneJeu, 0, 50, hauteur};
+  SDL_RenderFillRect(win->renderer,&bordureSombre);
+  
 
   //placer les boxies placés
   for (size_t i = 0; i < this->grille.size(); i++) {
