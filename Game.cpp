@@ -5,8 +5,8 @@ void Game::init(int largeur_grille, int hauteur_grille)
 {
   win = new WindowSurface("Tetris666",1400,1000);
   win->ajouter_sprite("fond",Sprite({0,0,10,10}));
-  win->ajouter_sprite("deco",Sprite({0,0,287,1056}));
-  win->ajouter_sprite("pattern",Sprite({0,0,288,320}));
+  win->ajouter_sprite("deco",Sprite({0,0,1056,287}));
+  win->ajouter_sprite("pattern",Sprite({0,288,320,423}));
   win->ajouter_sprite("boxi",Sprite({299,0,40,40}));
   creer_pieces();
   score = 0;
@@ -99,39 +99,42 @@ void Game::draw(int largeur, int hauteur)
   SDL_RenderClear(win->renderer);
 
 
-  // Bordure fenêtre de jeu
-  // SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
-  // SDL_Rect rightcol = { largeur-200, 0, 200, hauteur};
-  // SDL_RenderFillRect(win->renderer,&rightcol);
 
   // Fond sombre
   SDL_Rect *srcBackground = win->sprites.at("fond").get();
-  for(i = 0; i < 1400; i+=1056)
+  for(i = 0; i < 1400; i+=10)
   {
     for(j = 0; j < 1000 ; j+=10 ) {
       SDL_Rect dest = {i,j,srcBackground->w,srcBackground->h};
       SDL_RenderCopy(win->renderer,win->pTexture,srcBackground,&dest);
     }
   }
-
-  // SDL_Rect *srcTetris = win->sprites.at("deco").get();
-  // for(i = 0; i > 1400; i+=1056)
-  // {
-  //   int j = 1000-287;
-  //   SDL_Rect dest = {i,j,srcTetris->w,srcTetris->h};
-  //   SDL_RenderCopy(win->renderer,win->pTexture,srcTetris,&dest);
-  // }
-
+  // Déco blocs
+  SDL_Rect *srcTetris = win->sprites.at("deco").get();
+  for(i = 0; i < 1400; i+=1056)
+  {
+    // for(j = 0; j < 1000 ; j+=300 ) {
+      int j = 1000-287;
+      SDL_Rect dest = {i,j,srcTetris->w,srcTetris->h};
+      SDL_RenderCopy(win->renderer,win->pTexture,srcTetris,&dest);
+    // }
+  }
+  // Bordure fenêtre de jeu
+  // SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
+  // SDL_Rect rightcol = { largeur-200, 0, 200, hauteur};
+  // SDL_RenderFillRect(win->renderer,&rightcol);
   // récupération sprite fond
-  // SDL_Rect *srcFond = win->sprites.at("pattern").get();
-  // for(i = largeur-200-srcFond->w; i > (-1)*srcFond->w; i-=srcFond->w)
-  // {
-  //   for(j = 0; j < hauteur; j+=srcFond->h)
-  //   {
-  //       SDL_Rect dest = {i,j,srcFond->w,srcFond->h};
-  //       SDL_RenderCopy(win->renderer,win->pTexture,srcFond,&dest);
-  //   }
-  // }
+  SDL_Rect *srcFond = win->sprites.at("pattern").get();
+  int depart = (largeur - 300)/2;
+  // std::cout << depart << "\n";
+  for(i = depart; i < depart+this->largeur_grille; i+=srcFond->w)
+  {
+    for(j = 0; j < hauteur; j+=srcFond->h)
+    {
+        SDL_Rect dest = {i,j,srcFond->w,srcFond->h};
+        SDL_RenderCopy(win->renderer,win->pTexture,srcFond,&dest);
+    }
+  }
 
   //placer les boxies placés
   for (size_t i = 0; i < this->grille.size(); i++) {
@@ -154,11 +157,11 @@ void Game::draw(int largeur, int hauteur)
   SDL_RenderFillRect(win->renderer,&rightcol);
 
   SDL_Color color = { 255, 255, 255 };
-  SDL_Surface * surface = TTF_RenderText_Solid(win->font,"Tetris666", color);
-  SDL_Texture * texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+  SDL_Surface *surface = TTF_RenderText_Solid(win->font,"Tetris666", color);
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   SDL_Rect dstrect = { largeur-190, 10, 180, 100 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
-  
+
 
 
 }
