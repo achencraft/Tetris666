@@ -9,7 +9,7 @@ class Boxi {
     public:
         // constructeur
         Boxi();
-        Boxi(std::string s, int x, int y);
+        Boxi(std::string s, int x, int y, SDL_Color color);
 
         //méthodes
         int get_x();
@@ -20,6 +20,7 @@ class Boxi {
         void set_temp_pos(int x, int y);
         void set_pos_x(int x);
         void reset(int xx, int min_x, int min_y);
+        SDL_Color get_color();
         // getter
         std::string get_sprite();
         // déplacement
@@ -33,6 +34,9 @@ class Boxi {
         int y;
         int tmp_x;
         int tmp_y;
+
+    private:
+        SDL_Color color;
 };
 
 
