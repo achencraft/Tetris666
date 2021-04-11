@@ -233,7 +233,7 @@ void Game::draw(int largeur, int hauteur)
   }
 
   //Affichage pièce sauvegardée
-  color = { 255, 255, 255 };
+  color = { 169, 59, 58 };
   surface = TTF_RenderText_Solid(win->font,"PIECE SAUVEGARDEE :", color);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   dstrect = { posBordureDroite, 600, 150, 40 };
