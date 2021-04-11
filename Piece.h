@@ -10,7 +10,7 @@ class Piece
 {
     public:
         Piece();
-        Piece(std::vector<Boxi> motif, int color, int largeur);
+        Piece(std::vector<Boxi> motif, int largeur);
         std::vector<Boxi> *get_boxies();
         bool chuter(int hauteur, std::vector<Boxi> grille);
         void gauche(int largeur, std::vector<Boxi> grille);
@@ -18,6 +18,7 @@ class Piece
         void rotation(int largeur, int hauteur, std::vector<Boxi> grille);
         void remonter(int largeur, std::vector<Boxi> grille);
         void poser();
+        SDL_Color get_color();
         // verif
         bool isPieceOnTheBorderLeft(int largeur);
         bool isPieceOnTheBorderRight(int largeur);
@@ -31,7 +32,7 @@ class Piece
     protected:
 
         bool estPose;
-        std::vector<int> color;
+        SDL_Color color;
         std::vector<Boxi> boxies;
 
         // methode

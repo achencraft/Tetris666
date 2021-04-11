@@ -2,11 +2,9 @@
 
 Boxi::Boxi() {}
 
-Boxi::Boxi(std::string s, int xx, int yy) {
-    sprite = s;
-    x = xx;
-    y = yy;
-}
+Boxi::Boxi(std::string s, int x, int y, SDL_Color color) :
+  sprite(s), x(x), y(y), color(color)
+  {}
 
 int Boxi::get_x() {
   return x;
@@ -23,6 +21,11 @@ int Boxi::get_tx() {
 
 int Boxi::get_ty() {
   return tmp_y;
+}
+
+SDL_Color Boxi::get_color()
+{
+  return color;
 }
 
 void Boxi::confirm_tmp_pos() 

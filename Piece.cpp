@@ -2,11 +2,12 @@
 
 Piece::Piece() {}
 
-Piece::Piece(std::vector<Boxi> motif, int color, int largeur)
+Piece::Piece(std::vector<Boxi> motif, int largeur)
 {
     this->estPose = false;
     boxies = motif;
     std::for_each(boxies.begin(),boxies.end(), [largeur] (Boxi &b) {b.set_pos_x(largeur/2-1);});
+    color = boxies.at(0).get_color();
 
 }
 
@@ -210,4 +211,9 @@ bool Piece::isRotaValid(int largeur, int hauteur, std::vector<Boxi> grille)
     return true;
     
 
+}
+
+SDL_Color Piece::get_color()
+{
+  return color;
 }

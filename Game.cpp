@@ -27,7 +27,7 @@ void Game::init(int largeur_grille, int hauteur_grille)
 Piece Game::nouvelle_piece()
 {
     int piece_id = rand() % 7; //entre 0 et 6 inclus
-    Piece p = Piece(this->liste_pieces.at(piece_id),0,largeur_grille);
+    Piece p = Piece(this->liste_pieces.at(piece_id),largeur_grille);
     return p;
 }
 
@@ -171,15 +171,17 @@ void Game::draw(int largeur, int hauteur)
   //placer les boxies placés
   for (size_t i = 0; i < this->grille.size(); i++) {
     Boxi boxi = this->grille[i];
-    draw_boxi(boxi.get_x(), boxi.get_y(), taille_boxi);
+    SDL_Color color = boxi.get_color();
+    draw_boxi(boxi.get_x(), boxi.get_y(), taille_boxi, color);
   }
 
   //placer la pièce qui tombe
   if(yatilUnePieceEnTrainDeTomber) {
     std::vector<Boxi> *piece = piece_courante.get_boxies();
+    SDL_Color color = piece_courante.get_color();
     for (size_t i = 0; i < piece->size(); i++) {
       Boxi boxi = piece->at(i);
-      draw_boxi(piece->at(i).get_x(), piece->at(i).get_y(), taille_boxi);
+      draw_boxi(piece->at(i).get_x(), piece->at(i).get_y(), taille_boxi,color);
     }
   }
 
@@ -224,9 +226,10 @@ void Game::draw(int largeur, int hauteur)
 
   //placer la prochaine pièce
   std::vector<Boxi> *piece = piece_suivante.get_boxies();
+  color = piece_suivante.get_color();
   for (size_t i = 0; i < piece->size(); i++) {
     Boxi boxi = piece->at(i);
-    draw_boxi_right(posBordureDroite-15, 410,piece->at(i).get_x(), piece->at(i).get_y(), 15);
+    draw_boxi_right(posBordureDroite-15, 410,piece->at(i).get_x(), piece->at(i).get_y(), 15,color);
   }
 
   //Affichage pièce sauvegardée
@@ -244,31 +247,32 @@ void Game::draw(int largeur, int hauteur)
     int hauteur_piece,largeur_piece,min_x,min_y;
     std::vector<Boxi> *piece = piece_sauvegarde.get_boxies();
     piece_sauvegarde.get_piece_dim(&hauteur_piece,&largeur_piece,&min_x,&min_y);
+    SDL_Color color = piece_sauvegarde.get_color();
 
     for (size_t i = 0; i < piece->size(); i++) {
       Boxi boxi = piece->at(i);
-      draw_boxi_right(posBordureDroite-15, 710,piece->at(i).get_x()-min_x+6, piece->at(i).get_y()-min_y+1, 15);
+      draw_boxi_right(posBordureDroite-15, 710,piece->at(i).get_x()-min_x+6, piece->at(i).get_y()-min_y+1, 15, color);
     }
   }
 
 
 }
 
-void Game::draw_boxi(int x, int y, int taille)
+void Game::draw_boxi(int x, int y, int taille, SDL_Color color)
 {
     SDL_Rect dest = { left_marge + taille*x, taille*y, taille, taille };
-    SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
+    SDL_SetRenderDrawColor(win->renderer,color.r,color.g,color.b,255);
     SDL_RenderFillRect(win->renderer,&dest);
-    SDL_SetRenderDrawColor(win->renderer,209,0,127,255);
+    SDL_SetRenderDrawColor(win->renderer,255,255,255,100);
     SDL_RenderDrawRect(win->renderer,&dest);
 }
 
-void Game::draw_boxi_right(int sx, int sy, int x, int y, int taille)
+void Game::draw_boxi_right(int sx, int sy, int x, int y, int taille,SDL_Color color)
 {
     SDL_Rect dest = { sx+(taille*x), sy+(taille*y), taille, taille };
-    SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
+    SDL_SetRenderDrawColor(win->renderer,color.r,color.g,color.b,255);
     SDL_RenderFillRect(win->renderer,&dest);
-    SDL_SetRenderDrawColor(win->renderer,209,0,127,255);
+    SDL_SetRenderDrawColor(win->renderer,255,255,255,10);
     SDL_RenderDrawRect(win->renderer,&dest);
 }
 
@@ -423,57 +427,64 @@ void Game::creer_pieces()
     std::vector<Boxi> boxi_tab;
 
     //Pièce Carrée 0
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,0));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
+    SDL_Color color = {169,59,58,255};
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,0,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1,color));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce L 1
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,0));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,0));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,1));
+    color = {244,126,28,255};
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,0,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,0,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,1,color));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce L inversé 2
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,1));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,0));
+    color = {57,70,122,255};
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,1,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",2,0,color));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce S 3
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,2));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,0));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
+    color = {142,71,141,255};
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,2,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,0,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1,color));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce Z 4
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,2));
+    color = {95,128,144,255};
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,2,color));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce I 5
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,2));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,3));
+    color = {115,169,57,255};
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,2,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,3,color));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
     boxi_tab.clear();
 
     //Pièce T 6
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,2));
-    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1));
+    color = {244,180,31,255};
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,0,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,1,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",0,2,color));
+    boxi_tab.insert(boxi_tab.end(),Boxi("boxi",1,1,color));
     liste_pieces.insert(liste_pieces.end(),boxi_tab);
 }
