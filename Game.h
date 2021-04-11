@@ -9,6 +9,7 @@
 #include <map>
 #include <thread>
 #include <chrono>
+#include <string>
 
 class Game
 {

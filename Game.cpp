@@ -158,6 +158,14 @@ void Game::draw(int largeur, int hauteur)
   SDL_Texture * texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   SDL_Rect dstrect = { largeur-190, 10, 180, 100 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+
+  std::string s = std::to_string(score);
+  char const *pchar = s.c_str();
+
+  surface = TTF_RenderText_Solid(win->font,pchar, color);
+  texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+  dstrect = { largeur-190, 150, 100, 50 };
+  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
   
 
 
