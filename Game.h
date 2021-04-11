@@ -25,7 +25,8 @@ class Game
         bool ZePartiiii;
         bool JustSpawned;
         int tour;
-        int score;
+        int score;  
+        int left_marge;
         int largeur_grille;
         int hauteur_grille;
         std::vector<Boxi> grille;

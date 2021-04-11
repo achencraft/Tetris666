@@ -14,6 +14,7 @@ void Game::init(int largeur_grille, int hauteur_grille)
   ZePartiiii = false;
   yatilUnePieceEnTrainDeTomber = false;
   yatilUnePieceSauvee = false;
+  left_marge = 200;
 
   this->hauteur_grille = hauteur_grille;
   this->largeur_grille = largeur_grille;
@@ -243,7 +244,7 @@ void Game::draw(int largeur, int hauteur)
 
 void Game::draw_boxi(int x, int y, int taille)
 {
-    SDL_Rect dest = { taille*x, taille*y, taille, taille };
+    SDL_Rect dest = { left_marge + taille*x, taille*y, taille, taille };
     SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
     SDL_RenderFillRect(win->renderer,&dest);
     SDL_SetRenderDrawColor(win->renderer,209,0,127,255);
