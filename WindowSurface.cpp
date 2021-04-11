@@ -20,7 +20,7 @@ WindowSurface::WindowSurface(std::string name, int hauteur, int largeur) :
     }
 
 
-    plancheSprites = SDL_LoadBMP("./sprite.bmp");
+    plancheSprites = SDL_LoadBMP("./sprites.bmp");
     if(!plancheSprites)
     {
         std::cout << "erreur loadbmp\n";
