@@ -166,7 +166,7 @@ void Game::draw(int largeur, int hauteur)
   SDL_RenderFillRect(win->renderer,&bordureSombre);
   bordureSombre = { depart+largeurZoneJeu, 0, 50, hauteur};
   SDL_RenderFillRect(win->renderer,&bordureSombre);
-  
+
 
   //placer les boxies placés
   for (size_t i = 0; i < this->grille.size(); i++) {
@@ -179,16 +179,17 @@ void Game::draw(int largeur, int hauteur)
   if(yatilUnePieceEnTrainDeTomber) {
     std::vector<Boxi> *piece = piece_courante.get_boxies();
     SDL_Color color = piece_courante.get_color();
-    for (size_t i = 0; i < piece->size(); i++) {      
+    for (size_t i = 0; i < piece->size(); i++) {
       Boxi boxi = piece->at(i);
       draw_boxi(piece->at(i).get_x(), piece->at(i).get_y(), taille_boxi,color);
     }
   }
 
-  //placer colonne droite
-  SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
-  SDL_Rect rightcol = { largeur-200, 0, 200, hauteur};
-  SDL_RenderFillRect(win->renderer,&rightcol);
+  // Placer colonne droite
+  int posBordureDroite = depart+largeurZoneJeu+100;
+  // SDL_SetRenderDrawColor(win->renderer,209,141,127,0);
+  // SDL_Rect rightcol = { posBordureDroite, 0, 200, hauteur};
+  // SDL_RenderFillRect(win->renderer,&rightcol);
 
 
   // --------------------------------------- //
@@ -196,31 +197,31 @@ void Game::draw(int largeur, int hauteur)
   // --------------------------------------- //
 
   //Affichage titre
-  SDL_Color color = { 255, 255, 255 };
+  SDL_Color color = { 169, 59, 58 };
   SDL_Surface *surface = TTF_RenderText_Solid(win->font,"Tetris666", color);
   SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  SDL_Rect dstrect = { largeur-190, 10, 180, 100 };
+  SDL_Rect dstrect = { posBordureDroite, 10, 180, 100 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
 
 
   //Affichage score
-  surface = TTF_RenderText_Solid(win->font,"score :", color);
+  surface = TTF_RenderText_Solid(win->font,"SCORE :", color);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  dstrect = { largeur-190, 150, 50, 40 };
+  dstrect = { largeur+190, 150, 50, 40 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
   std::string s = std::to_string(score);
   surface = TTF_RenderText_Solid(win->font,s.c_str(), color);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  dstrect = { largeur-190, 200, 60, 50 };
+  dstrect = { posBordureDroite, 200, 60, 50 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
 
   //Affichage pièce suivante
-  surface = TTF_RenderText_Solid(win->font,"piece suivante :", color);
+  surface = TTF_RenderText_Solid(win->font,"PIECE SUIVANTE :", color);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  dstrect = { largeur-190, 300, 150, 40 };
+  dstrect = { posBordureDroite, 300, 150, 40 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
-  SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
-  rightcol = { largeur-190, 350, 180, 180};
+  SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
+  SDL_Rect rightcol = { posBordureDroite, 350, 180, 180};
   SDL_RenderFillRect(win->renderer,&rightcol);
 
   //placer la prochaine pièce
@@ -228,18 +229,17 @@ void Game::draw(int largeur, int hauteur)
   color = piece_suivante.get_color();
   for (size_t i = 0; i < piece->size(); i++) {
     Boxi boxi = piece->at(i);
-    draw_boxi_right(largeur-210, 410,piece->at(i).get_x(), piece->at(i).get_y(), 15,color);
+    draw_boxi_right(posBordureDroite-15, 410,piece->at(i).get_x(), piece->at(i).get_y(), 15,color);
   }
-
 
   //Affichage pièce sauvegardée
   color = { 255, 255, 255 };
-  surface = TTF_RenderText_Solid(win->font,"piece sauvegarde :", color);
+  surface = TTF_RenderText_Solid(win->font,"PIECE SAUVEGARDEE :", color);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  dstrect = { largeur-190, 600, 150, 40 };
+  dstrect = { posBordureDroite, 600, 150, 40 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
-  SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
-  rightcol = { largeur-190, 650, 180, 180};
+  SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
+  rightcol = { posBordureDroite, 650, 180, 180};
   SDL_RenderFillRect(win->renderer,&rightcol);
 
   //placer la piece sauvegardee
@@ -252,7 +252,7 @@ void Game::draw(int largeur, int hauteur)
 
     for (size_t i = 0; i < piece->size(); i++) {
       Boxi boxi = piece->at(i);
-      draw_boxi_right(largeur-210, 710,piece->at(i).get_x()-min_x+6, piece->at(i).get_y()-min_y+1, 15, color);
+      draw_boxi_right(posBordureDroite-15, 710,piece->at(i).get_x()-min_x+6, piece->at(i).get_y()-min_y+1, 15, color);
     }
   }
 
@@ -425,7 +425,7 @@ int main(int argc, char** argv)
 
 void Game::creer_pieces()
 {
-    std::vector<Boxi> boxi_tab;    
+    std::vector<Boxi> boxi_tab;
 
     //Pièce Carrée 0
     SDL_Color color = {169,59,58,255};
