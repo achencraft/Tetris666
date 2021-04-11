@@ -233,6 +233,7 @@ void Game::draw(int largeur, int hauteur)
 
 
   //Affichage pièce sauvegardée
+  color = { 255, 255, 255 };
   surface = TTF_RenderText_Solid(win->font,"piece sauvegarde :", color);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   dstrect = { largeur-190, 600, 150, 40 };
@@ -263,7 +264,7 @@ void Game::draw_boxi(int x, int y, int taille, SDL_Color color)
     SDL_Rect dest = { left_marge + taille*x, taille*y, taille, taille };
     SDL_SetRenderDrawColor(win->renderer,color.r,color.g,color.b,255);
     SDL_RenderFillRect(win->renderer,&dest);
-    SDL_SetRenderDrawColor(win->renderer,255,255,255,100);
+    SDL_SetRenderDrawColor(win->renderer,color.r/2,color.g/2,color.b/2,100);
     SDL_RenderDrawRect(win->renderer,&dest);
 }
 
@@ -272,7 +273,7 @@ void Game::draw_boxi_right(int sx, int sy, int x, int y, int taille,SDL_Color co
     SDL_Rect dest = { sx+(taille*x), sy+(taille*y), taille, taille };
     SDL_SetRenderDrawColor(win->renderer,color.r,color.g,color.b,255);
     SDL_RenderFillRect(win->renderer,&dest);
-    SDL_SetRenderDrawColor(win->renderer,255,255,255,10);
+    SDL_SetRenderDrawColor(win->renderer,color.r/2,color.g/2,color.b/2,10);
     SDL_RenderDrawRect(win->renderer,&dest);
 }
 
