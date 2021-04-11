@@ -128,12 +128,12 @@ void Game::draw(int largeur, int hauteur)
   SDL_Rect rightcol = { largeur-200, 0, 200, hauteur};
   SDL_RenderFillRect(win->renderer,&rightcol);
 
-  /*SDL_Color color = { 255, 255, 255 };
+  SDL_Color color = { 255, 255, 255 };
   SDL_Surface * surface = TTF_RenderText_Solid(win->font,"Tetris666", color);
   SDL_Texture * texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  SDL_Rect dstrect = { 0, 0, 10, 10 };
+  SDL_Rect dstrect = { largeur-190, 10, 180, 100 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
-  */
+  
 
 
 }
@@ -195,7 +195,7 @@ void Game::loop()
             delai_chute = 1000;
             break;
           case SDLK_SPACE:
-            if(!JustSpawned)
+            if(!JustSpawned && yatilUnePieceEnTrainDeTomber)
               this->piece_courante.rotation(largeur_grille, hauteur_grille, this->grille);
             break;
           default:
