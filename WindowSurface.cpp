@@ -34,7 +34,7 @@ WindowSurface::WindowSurface(std::string name, int hauteur, int largeur) :
         exit(1);
     }
 
-    font = TTF_OpenFont("arial.ttf", 25);
+    font = TTF_OpenFont("pkmndpb.ttf", 40);
 }
 
 void WindowSurface::get_dimension(int *hauteur, int *largeur)

@@ -116,12 +116,17 @@ void Game::draw(int largeur, int hauteur)
 {
   int i, j, taille_boxi;
   taille_boxi = hauteur/hauteur_grille;
+  int largeurZoneJeu = taille_boxi*this->largeur_grille;
+  // Marge de gauche
+  int depart = (largeur - largeurZoneJeu)/2;
 
   //on efface la fenêtre
   SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
   SDL_RenderClear(win->renderer);
 
-
+  // --------------------------------------- //
+  // ---------- AFFICHAGE SPRITES ---------- //
+  // --------------------------------------- //
 
   // Fond sombre
   SDL_Rect *srcBackground = win->sprites.at("fond").get();
@@ -136,21 +141,17 @@ void Game::draw(int largeur, int hauteur)
   SDL_Rect *srcTetris = win->sprites.at("deco").get();
   for(i = 0; i < 1400; i+=1056)
   {
-    // for(j = 0; j < 1000 ; j+=300 ) {
-      int j = 1000-287;
-      SDL_Rect dest = {i,j,srcTetris->w,srcTetris->h};
-      SDL_RenderCopy(win->renderer,win->pTexture,srcTetris,&dest);
-    // }
+    int j = 1000-287;
+    SDL_Rect dest = {i,j,srcTetris->w,srcTetris->h};
+    SDL_RenderCopy(win->renderer,win->pTexture,srcTetris,&dest);
   }
   // Bordure fenêtre de jeu
-  // SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
-  // SDL_Rect rightcol = { largeur-200, 0, 200, hauteur};
-  // SDL_RenderFillRect(win->renderer,&rightcol);
+  SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
+  SDL_Rect bordureSombre = { depart-50, 0, (largeurZoneJeu+140), hauteur};
+  SDL_RenderFillRect(win->renderer,&bordureSombre);
   // récupération sprite fond
   SDL_Rect *srcFond = win->sprites.at("pattern").get();
-  int depart = (largeur - 300)/2;
-  // std::cout << depart << "\n";
-  for(i = depart; i < depart+this->largeur_grille; i+=srcFond->w)
+  for(i = depart; i < depart+largeurZoneJeu; i+=srcFond->w)
   {
     for(j = 0; j < hauteur; j+=srcFond->h)
     {
