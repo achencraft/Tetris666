@@ -42,6 +42,14 @@ void Piece::droite(int largeur, std::vector<Boxi> grille)
   }
 }
 
+void Piece::remonter(int largeur, std::vector<Boxi> grille)
+{
+  int largeur_piece, hauteur_piece, min_x, min_y;
+  this->get_piece_dim(&hauteur_piece,&largeur_piece,&min_x,&min_y);
+  std::for_each(boxies.begin(),boxies.end(), [largeur,min_x,min_y] (Boxi &b) {b.reset(largeur/2-1, min_x, min_y);});
+  
+}
+
 bool Piece::isPieceOnTheBorderLeft(int largeur) {
   // bool isBord = true;
   // bords de l'écran

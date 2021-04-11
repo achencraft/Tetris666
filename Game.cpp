@@ -13,6 +13,7 @@ void Game::init(int largeur_grille, int hauteur_grille)
   yatilUnePieceDansLavion = false;
   ZePartiiii = false;
   yatilUnePieceEnTrainDeTomber = false;
+  yatilUnePieceSauvee = false;
 
   this->hauteur_grille = hauteur_grille;
   this->largeur_grille = largeur_grille;
@@ -23,6 +24,28 @@ Piece Game::nouvelle_piece()
     int piece_id = rand() % 7; //entre 0 et 6 inclus
     Piece p = Piece(this->liste_pieces.at(piece_id),0,largeur_grille);
     return p;
+}
+
+void Game::sauvegarde_piece()
+{
+    int hauteur_piece,largeur_piece,min_x,min_y;
+    if(!this->yatilUnePieceSauvee)
+    {
+      this->piece_sauvegarde = this->piece_courante;
+      this->yatilUnePieceDansLavion = true;
+      this->yatilUnePieceEnTrainDeTomber = false;
+      this->yatilUnePieceSauvee = true;
+    }
+    else
+    {    
+      Piece tmp = this->piece_courante;
+      this->piece_courante = this->piece_sauvegarde;
+      this->piece_sauvegarde = tmp;
+    }
+
+
+ 
+
 }
 
 void Game::addPieceToTheGrille() {
@@ -153,20 +176,63 @@ void Game::draw(int largeur, int hauteur)
   SDL_Rect rightcol = { largeur-200, 0, 200, hauteur};
   SDL_RenderFillRect(win->renderer,&rightcol);
 
+  //Affichage titre
   SDL_Color color = { 255, 255, 255 };
   SDL_Surface * surface = TTF_RenderText_Solid(win->font,"Tetris666", color);
   SDL_Texture * texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   SDL_Rect dstrect = { largeur-190, 10, 180, 100 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
 
-  std::string s = std::to_string(score);
-  char const *pchar = s.c_str();
 
-  surface = TTF_RenderText_Solid(win->font,pchar, color);
+  //Affichage score
+  surface = TTF_RenderText_Solid(win->font,"score :", color);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  dstrect = { largeur-190, 150, 100, 50 };
+  dstrect = { largeur-190, 150, 50, 40 };
+  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  std::string s = std::to_string(score);
+  surface = TTF_RenderText_Solid(win->font,s.c_str(), color);
+  texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+  dstrect = { largeur-190, 200, 60, 50 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
   
+  //Affichage pièce suivante
+  surface = TTF_RenderText_Solid(win->font,"piece suivante :", color);
+  texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+  dstrect = { largeur-190, 300, 150, 40 };
+  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
+  rightcol = { largeur-190, 350, 180, 180};
+  SDL_RenderFillRect(win->renderer,&rightcol);
+
+  //placer la prochaine pièce
+  std::vector<Boxi> *piece = piece_suivante.get_boxies();
+  for (size_t i = 0; i < piece->size(); i++) {
+    Boxi boxi = piece->at(i);
+    draw_boxi_right(largeur-210, 410,piece->at(i).get_x(), piece->at(i).get_y(), 15);
+  }
+  
+
+  //Affichage pièce sauvegardée
+  surface = TTF_RenderText_Solid(win->font,"piece sauvegarde :", color);
+  texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+  dstrect = { largeur-190, 600, 150, 40 };
+  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
+  rightcol = { largeur-190, 650, 180, 180};
+  SDL_RenderFillRect(win->renderer,&rightcol);
+
+  //placer la piece sauvegardee
+  if(this->yatilUnePieceSauvee)
+  {
+    int hauteur_piece,largeur_piece,min_x,min_y;
+    std::vector<Boxi> *piece = piece_sauvegarde.get_boxies();
+    piece_sauvegarde.get_piece_dim(&hauteur_piece,&largeur_piece,&min_x,&min_y);
+
+    for (size_t i = 0; i < piece->size(); i++) {
+      Boxi boxi = piece->at(i);
+      draw_boxi_right(largeur-210, 710,piece->at(i).get_x()-min_x+6, piece->at(i).get_y()-min_y+1, 15);
+    }
+  }
 
 
 }
@@ -174,6 +240,15 @@ void Game::draw(int largeur, int hauteur)
 void Game::draw_boxi(int x, int y, int taille)
 {
     SDL_Rect dest = { taille*x, taille*y, taille, taille };
+    SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
+    SDL_RenderFillRect(win->renderer,&dest);
+    SDL_SetRenderDrawColor(win->renderer,209,0,127,255);
+    SDL_RenderDrawRect(win->renderer,&dest);
+}
+
+void Game::draw_boxi_right(int sx, int sy, int x, int y, int taille)
+{
+    SDL_Rect dest = { sx+(taille*x), sy+(taille*y), taille, taille };
     SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
     SDL_RenderFillRect(win->renderer,&dest);
     SDL_SetRenderDrawColor(win->renderer,209,0,127,255);
@@ -214,6 +289,7 @@ void Game::loop()
               this->yatilUnePieceDansLavion = true;
               this->ZePartiiii = true;
               this->JustSpawned = true;
+              this->tour = 0;
             }
             break;
           case SDLK_LEFT:
@@ -230,6 +306,11 @@ void Game::loop()
           case SDLK_SPACE:
             if(!JustSpawned && yatilUnePieceEnTrainDeTomber)
               this->piece_courante.rotation(largeur_grille, hauteur_grille, this->grille);
+            break;
+          case SDLK_RSHIFT:
+            if(!JustSpawned && yatilUnePieceEnTrainDeTomber)
+              this->sauvegarde_piece();
+              this->piece_courante.remonter(largeur_grille, this->grille);
             break;
           default:
             break;
@@ -256,12 +337,21 @@ void Game::loop()
     //nouvelle pièce si la dernière pièce a été posée
     if(this->yatilUnePieceDansLavion)
     {
-      Piece p = this->nouvelle_piece();
-      this->piece_courante = p;
+      if(this->tour == 0)
+      {
+        this->piece_courante = this->nouvelle_piece();
+        this->piece_suivante = this->nouvelle_piece();
+      }
+      else
+      {
+        this->piece_courante = this->piece_suivante;
+        this->piece_suivante = this->nouvelle_piece();
+      }
       // std::cout << "Création d'une pièce\n";
       this->yatilUnePieceDansLavion = false;
       this->yatilUnePieceEnTrainDeTomber = true;
       this->JustSpawned = true;
+      tour = tour + 1;
     }
 
     if (currentTime > lastTime + delai_chute) {

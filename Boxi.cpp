@@ -37,6 +37,12 @@ void Boxi::set_temp_pos(int xx, int yy)
     tmp_y = yy;
 }
 
+void Boxi::reset(int xx, int min_x, int min_y)
+{
+    x = (this->get_x() - min_x + xx);
+    y = (this->get_y() - min_y);
+}
+
 std::string Boxi::get_sprite() {
   return sprite;
 }
