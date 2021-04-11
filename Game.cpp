@@ -14,10 +14,14 @@ void Game::init(int largeur_grille, int hauteur_grille)
   ZePartiiii = false;
   yatilUnePieceEnTrainDeTomber = false;
   yatilUnePieceSauvee = false;
-  left_marge = 200;
+  int taille_boxi = 1000/hauteur_grille;
+  int largeurZoneJeu = taille_boxi*largeur_grille;
+  // Marge de gauche
+  left_marge = (1400 - largeurZoneJeu)/2;
 
   this->hauteur_grille = hauteur_grille;
   this->largeur_grille = largeur_grille;
+
 }
 
 Piece Game::nouvelle_piece()
@@ -180,6 +184,11 @@ void Game::draw(int largeur, int hauteur)
   SDL_SetRenderDrawColor(win->renderer,209,141,127,255);
   SDL_Rect rightcol = { largeur-200, 0, 200, hauteur};
   SDL_RenderFillRect(win->renderer,&rightcol);
+
+
+  // --------------------------------------- //
+  // ---------- AFFICHAGE TEXTES ----------- //
+  // --------------------------------------- //
 
   //Affichage titre
   SDL_Color color = { 255, 255, 255 };
