@@ -275,32 +275,42 @@ void Main::afficher_colonne(int left_marge, Game game)
   // ---------- AFFICHAGE TEXTES ----------- //
   // --------------------------------------- //
 
-  //Affichage titre
   SDL_Color color = { 169, 59, 58 };
-  SDL_Surface *surface = TTF_RenderText_Solid(win->font,"Tetris666", color);
+  //Affichage titre
+  SDL_Color colorTitre = { 80, 80, 80 };
+  SDL_Surface *surface = TTF_RenderText_Solid(win->font,"TETRIS666", colorTitre);
   SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  SDL_Rect dstrect = { left_marge, 10, 180, 100 };
+  SDL_Rect dstrect = { left_marge, 45, 190, 50 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
 
-  //Affichage score
-  surface = TTF_RenderText_Solid(win->font,"SCORE :", color);
+  // ---- Affichage score ---- //
+  // carré fond noir
+  SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
+  SDL_Rect rightcol = { left_marge, 145, 190, 140};
+  SDL_RenderFillRect(win->renderer,&rightcol);
+  // titre
+  surface = TTF_RenderText_Solid(win->font,"SCORE:", color);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  dstrect = { left_marge+190, 150, 50, 40 };
+  dstrect = { left_marge+15, 160, 60, 14 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
-  std::string s = std::to_string(game.get_score());
-  surface = TTF_RenderText_Solid(win->font,s.c_str(), color);
+  // texte score
+  SDL_Color colorPoints = { 90, 90, 90 };
+  std::string s = std::to_string(game.get_score()) + " POINTS";
+  surface = TTF_RenderText_Solid(win->font,s.c_str(), colorPoints);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  dstrect = { left_marge, 200, 60, 50 };
+  dstrect = { left_marge+40, 210, 100, 40 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
 
   //Affichage pièce suivante
-  surface = TTF_RenderText_Solid(win->font,"PIECE SUIVANTE :", color);
-  texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  dstrect = { left_marge, 300, 150, 40 };
-  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  // carré fond noir
   SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
-  SDL_Rect rightcol = { left_marge, 350, 180, 180};
+  rightcol = { left_marge, 340, 190, 180};
   SDL_RenderFillRect(win->renderer,&rightcol);
+  // titre
+  surface = TTF_RenderText_Solid(win->font,"PIECE SUIVANTE:", color);
+  texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+  dstrect = { left_marge+15, 355, 145, 20 };
+  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
 
   //placer la prochaine pièce
   Piece piece_suivante = game.get_piece_suivante();
@@ -308,18 +318,20 @@ void Main::afficher_colonne(int left_marge, Game game)
   color = piece_suivante.get_color();
   for (size_t i = 0; i < piece->size(); i++) {
     Boxi boxi = piece->at(i);
-    draw_boxi_right(left_marge-15, 410,piece->at(i).get_x(), piece->at(i).get_y(), 15,color, left_marge);
+    draw_boxi_right(-15,420,piece->at(i).get_x(), piece->at(i).get_y(), 15,color, left_marge);
   }
 
   //Affichage pièce sauvegardée
-  color = { 169, 59, 58 };
-  surface = TTF_RenderText_Solid(win->font,"PIECE SAUVEGARDEE :", color);
-  texture = SDL_CreateTextureFromSurface(win->renderer, surface);
-  dstrect = { left_marge, 600, 150, 40 };
-  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  // carré fond noir
   SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
-  rightcol = { left_marge, 650, 180, 180};
+  rightcol = { left_marge, 570, 190, 180};
   SDL_RenderFillRect(win->renderer,&rightcol);
+  // titre
+  color = { 169, 59, 58 };
+  surface = TTF_RenderText_Solid(win->font,"PIECE SAUVEGARDEE:", color);
+  texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+  dstrect = { left_marge+15, 585, 165, 20 };
+  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
 
   //placer la piece sauvegardee
   if(game.get_yatilUnePieceSauvee())
@@ -332,7 +344,7 @@ void Main::afficher_colonne(int left_marge, Game game)
 
     for (size_t i = 0; i < piece->size(); i++) {
       Boxi boxi = piece->at(i);
-      draw_boxi_right(left_marge-15, 710,piece->at(i).get_x()-min_x+6, piece->at(i).get_y()-min_y+1, 15, color, left_marge);
+      draw_boxi_right(-15,635,piece->at(i).get_x()-min_x+6, piece->at(i).get_y()-min_y+1, 15, color, left_marge);
     }
   }
 
