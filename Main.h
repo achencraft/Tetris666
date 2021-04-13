@@ -7,9 +7,6 @@
 #include "Piece.h"
 #include <iostream>
 #include <vector>
-#include <map>
-#include <thread>
-#include <chrono>
 #include <string>
 #include <cstring>
 

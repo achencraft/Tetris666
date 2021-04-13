@@ -20,6 +20,9 @@ void Game::init(int largeur_grille, int hauteur_grille)
 
 Piece Game::nouvelle_piece()
 {
+    struct timeval timer;
+    gettimeofday(&timer, NULL);
+    srand(timer.tv_usec);
     int piece_id = rand() % 7; //entre 0 et 6 inclus
     Piece p = Piece(this->liste_pieces.at(piece_id),largeur_grille);
     return p;
