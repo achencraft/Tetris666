@@ -29,7 +29,7 @@ class Main
     public:
         inline Main():
             win(nullptr) {};
-        void init(int mode, int largeur_grille, int hauteur_grille);
+        void init(int mode, int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int tailleZoneJeuY);
         void draw(int largeur, int hauteur);
         void draw_boxi(int x, int y, int taille, SDL_Color color, int left_marge);
         void draw_boxi_right(int sx, int sy, int x, int y, int taille,SDL_Color color, int left_marge);
