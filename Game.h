@@ -15,18 +15,17 @@ class Game
 {
 
     private:
-        WindowSurface* win;
+        
         Piece piece_courante;
         Piece piece_suivante;
         Piece piece_sauvegarde;
         bool yatilUnePieceSauvee;
-        bool yatilUnePieceDansLavion;
-        bool yatilUnePieceEnTrainDeTomber;
         bool ZePartiiii;
         bool JustSpawned;
-        int tour;
+        bool yatilUnePieceDansLavion;
+        int tour;        
         int score;  
-        int left_marge;
+        
         int largeur_grille;
         int hauteur_grille;
         std::vector<Boxi> grille;
@@ -43,13 +42,20 @@ class Game
 
 
     public:
-        inline Game():
-            win(nullptr) {};
+        Game();
         void init(int largeur_grille, int hauteur_grille);
-        void draw(int largeur, int hauteur);
-        void draw_boxi(int x, int y, int taille, SDL_Color color);
-        void draw_boxi_right(int sx, int sy, int x, int y, int taille,SDL_Color color);
-        void loop();
+        void check_nouvelle_piece();
+        bool actualiser_chute();
+        void debuter_partie();
+        void droite();
+        void gauche();
+        void rotation();
+        void sauvegarde();
+        std::vector<Boxi> get_grille();
+        Piece get_piece_courante();
+        bool yatilUnePieceEnTrainDeTomber;
+
+
 
 };
 

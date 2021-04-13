@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
-add_executable(Tetris666 Game.cpp Game.h Boxi.cpp Boxi.h Piece.cpp Piece.h Sprite.cpp Sprite.h WindowSurface.cpp WindowSurface.h)
+add_executable(Tetris666 Main.cpp Main.h Game.cpp Game.h Boxi.cpp Boxi.h Piece.cpp Piece.h Sprite.cpp Sprite.h WindowSurface.cpp WindowSurface.h)
 
 
 # Add SDL2 CMake modules
