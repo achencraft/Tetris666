@@ -23,6 +23,7 @@ class Game
         bool ZePartiiii;
         bool JustSpawned;
         bool yatilUnePieceDansLavion;
+        bool yatilUnePieceEnTrainDeTomber;
         int tour;        
         int score;  
         
@@ -53,7 +54,12 @@ class Game
         void sauvegarde();
         std::vector<Boxi> get_grille();
         Piece get_piece_courante();
-        bool yatilUnePieceEnTrainDeTomber;
+        Piece get_piece_suivante();
+        Piece get_piece_sauvegarde();
+        bool get_yatilUnePieceEnTrainDeTomber();
+        bool get_yatilUnePieceSauvee();
+        int get_score();
+        
 
 
 

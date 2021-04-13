@@ -196,6 +196,31 @@ Piece Game::get_piece_courante()
   return this->piece_courante;
 }
 
+Piece Game::get_piece_suivante()
+{
+  return this->piece_suivante;
+}
+
+Piece Game::get_piece_sauvegarde()
+{
+  return this->piece_sauvegarde;
+}
+
+int Game::get_score()
+{
+  return this->score;
+}
+
+bool Game::get_yatilUnePieceEnTrainDeTomber()
+{
+  return this->yatilUnePieceEnTrainDeTomber;
+}
+
+bool Game::get_yatilUnePieceSauvee()
+{
+  return this->yatilUnePieceSauvee;
+}
+
 
 
 void Game::creer_pieces()

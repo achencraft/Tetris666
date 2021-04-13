@@ -34,6 +34,7 @@ class Main
         void draw_boxi(int x, int y, int taille, SDL_Color color, int left_marge);
         void draw_boxi_right(int sx, int sy, int x, int y, int taille,SDL_Color color, int left_marge);
         void loop();
+        void afficher_colonne(int left_marge, Game game);
 
 };
 
