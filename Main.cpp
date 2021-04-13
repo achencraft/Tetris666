@@ -3,9 +3,9 @@
 
 
 
-void Main::init(int mode, int largeur_grille, int hauteur_grille)
+void Main::init(int mode, int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int tailleZoneJeuY)
 {
-    win = new WindowSurface("Tetris666",1400,1000);
+    win = new WindowSurface("Tetris666",tailleZoneJeuX,tailleZoneJeuY);
     win->ajouter_sprite("fond",Sprite({0,0,10,10}));
     win->ajouter_sprite("deco",Sprite({0,0,1056,287}));
     win->ajouter_sprite("pattern",Sprite({0,288,320,423}));
@@ -28,7 +28,7 @@ void Main::init(int mode, int largeur_grille, int hauteur_grille)
       this->game2 = g2;
       game2.init(largeur_grille, hauteur_grille);
     }
-    
+
 }
 
 
@@ -145,7 +145,7 @@ void Main::loop()
 
     // affiche la surface
     SDL_RenderPresent(win->renderer);
-    
+
 
   }
 
@@ -203,12 +203,12 @@ void Main::draw(int largeur, int hauteur)
   bordureSombre = { depart+largeurZoneJeu, 0, 50, hauteur};
   SDL_RenderFillRect(win->renderer,&bordureSombre);
 
-  
+
   if(mode > 1)
   {
     left_marge1 = 700;
   }
-  
+
 
   //placer les boxies placés
   std::vector<Boxi> grille1 = game1.get_grille();
@@ -219,7 +219,7 @@ void Main::draw(int largeur, int hauteur)
   }
 
   //placer la pièce qui tombe
-  if(this->game1.get_yatilUnePieceEnTrainDeTomber()) {    
+  if(this->game1.get_yatilUnePieceEnTrainDeTomber()) {
     Piece piece_courante1 = game1.get_piece_courante();
     std::vector<Boxi> *piece = piece_courante1.get_boxies();
     SDL_Color color = piece_courante1.get_color();
@@ -240,7 +240,7 @@ void Main::draw(int largeur, int hauteur)
       }
 
       //placer la pièce qui tombe
-      if(this->game2.get_yatilUnePieceEnTrainDeTomber()) {    
+      if(this->game2.get_yatilUnePieceEnTrainDeTomber()) {
         Piece piece_courante2 = game2.get_piece_courante();
         std::vector<Boxi> *piece = piece_courante2.get_boxies();
         SDL_Color color = piece_courante2.get_color();
@@ -252,7 +252,7 @@ void Main::draw(int largeur, int hauteur)
   }
 
   // Placer colonne droite
-  
+
   // SDL_SetRenderDrawColor(win->renderer,209,141,127,0);
   // SDL_Rect rightcol = { posBordureDroite, 0, 200, hauteur};
   // SDL_RenderFillRect(win->renderer,&rightcol);
@@ -376,14 +376,14 @@ int main(int argc, char** argv)
       if(strcmp(argv[1],"versus") == 0)
         {
             Main m;
-            m.init(2,15,25);
+            m.init(2,15,25,1400,1000);
             m.loop();
             return 0;
         }
       if(strcmp(argv[1],"ordi") == 0)
         {
             Main m;
-            m.init(3,15,25);
+            m.init(3,15,25,1400,1000);
             m.loop();
             return 0;
         }
@@ -393,10 +393,10 @@ int main(int argc, char** argv)
   else
   {
       Main m;
-      m.init(1,15,25);
+      m.init(1,15,25,1400,1000);
       m.loop();
   }
-  
+
     return 0;
-  
+
 }
