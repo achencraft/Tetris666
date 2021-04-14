@@ -13,7 +13,6 @@ class Game
 {
 
     private:
-        
         Piece piece_courante;
         Piece piece_suivante;
         Piece piece_sauvegarde;
@@ -22,9 +21,10 @@ class Game
         bool JustSpawned;
         bool yatilUnePieceDansLavion;
         bool yatilUnePieceEnTrainDeTomber;
-        int tour;        
-        int score;  
-        
+        int tour;
+        int score;
+        int quiSuisJe;
+
         int largeur_grille;
         int hauteur_grille;
         std::vector<Boxi> grille;
@@ -42,7 +42,7 @@ class Game
 
     public:
         Game();
-        void init(int largeur_grille, int hauteur_grille);
+        void init(int largeur_grille, int hauteur_grille, int player);
         void check_nouvelle_piece();
         bool actualiser_chute();
         void debuter_partie();
@@ -57,7 +57,8 @@ class Game
         bool get_yatilUnePieceEnTrainDeTomber();
         bool get_yatilUnePieceSauvee();
         int get_score();
-        
+        int getPlayer();
+
 
 
 

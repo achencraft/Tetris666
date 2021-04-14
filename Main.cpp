@@ -16,17 +16,20 @@ void Main::init(int mode, int largeur_grille, int hauteur_grille, int tailleZone
     int taille_boxi = 1000/hauteur_grille;
     int largeurZoneJeu = taille_boxi*largeur_grille;
 
+    tailleWarZoneX = tailleZoneJeuX;
+    tailleWarZoneY = tailleZoneJeuY;
+
     // Marge de gauche
     left_marge1 = (1400 - largeurZoneJeu)/2;
     left_marge2 = 0;
 
     Game g1,g2;
     this->game1 = g1;
-    game1.init(largeur_grille, hauteur_grille);
+    game1.init(largeur_grille, hauteur_grille,1);
     if(mode > 1)
     {
       this->game2 = g2;
-      game2.init(largeur_grille, hauteur_grille);
+      game2.init(largeur_grille, hauteur_grille,2);
     }
 
 }
@@ -46,7 +49,7 @@ void Main::loop()
   unsigned int lastTime2 = 0, delai_chute2 = 1000;
   unsigned int lastTime3 = 0, delai_chute3 = 333;
   if(mode == 4) delai_chute3 = 0;
-  
+
 
   while(!quit)
   {
@@ -126,7 +129,7 @@ void Main::loop()
 
 
     //IA idiote
-    
+
     if(mode >= 3 && currentTime > lastTime3 + delai_chute3)
     {
       struct timeval timer;
@@ -136,7 +139,7 @@ void Main::loop()
 
       delai_chute2 = (rand() % 1000) + 100;
 
-      
+
       if(choix == 5)
       {
         game2.rotation();
@@ -147,7 +150,7 @@ void Main::loop()
         } else {
           game2.droite();
         }
-        
+
       }
       lastTime3 = currentTime;
     }
@@ -177,8 +180,12 @@ void Main::loop()
 
 
   }
+  // --------------------------------------- //
+  // ---------- THIS IS THE EEEND ---------- //
+  // --------------------------------------- //
 
-  std::cout << "fini\n" ;
+
+  std::cout << "But in the end it doesn't even matter... *liniking park playing in the background\n" ;
   SDL_Quit();
 }
 
@@ -200,9 +207,9 @@ void Main::draw(int largeur, int hauteur)
 
   // Fond sombre
   SDL_Rect *srcBackground = win->sprites.at("fond").get();
-  for(i = 0; i < 1400; i+=10)
+  for(i = 0; i < tailleWarZoneX; i+=10)
   {
-    for(j = 0; j < 1000 ; j+=10 ) {
+    for(j = 0; j < tailleWarZoneY ; j+=10 ) {
       SDL_Rect dest = {i,j,srcBackground->w,srcBackground->h};
       SDL_RenderCopy(win->renderer,win->pTexture,srcBackground,&dest);
     }
@@ -215,27 +222,65 @@ void Main::draw(int largeur, int hauteur)
     SDL_Rect dest = {i,j,srcTetris->w,srcTetris->h};
     SDL_RenderCopy(win->renderer,win->pTexture,srcTetris,&dest);
   }
-  // récupération sprite fond
-  SDL_Rect *srcFond = win->sprites.at("pattern").get();
-  for(i = depart; i < depart+largeurZoneJeu; i+=srcFond->w)
-  {
-    for(j = 0; j < hauteur; j+=srcFond->h)
+
+  // SPRITE 1 JOUEUR
+  if(mode == 1) {
+    // récupération sprite fond
+    SDL_Rect *srcFond = win->sprites.at("pattern").get();
+    for(i = depart; i < depart+largeurZoneJeu; i+=srcFond->w)
     {
+      for(j = 0; j < hauteur; j+=srcFond->h)
+      {
         SDL_Rect dest = {i,j,srcFond->w,srcFond->h};
         SDL_RenderCopy(win->renderer,win->pTexture,srcFond,&dest);
+      }
     }
+    // Bordure fenêtre de jeu
+    SDL_SetRenderDrawColor(win->renderer,30,30,30,255);
+    SDL_Rect bordureSombre = { depart-50, 0, 50, hauteur};
+    SDL_RenderFillRect(win->renderer,&bordureSombre);
+    bordureSombre = { depart+largeurZoneJeu, 0, 50, hauteur};
+    SDL_RenderFillRect(win->renderer,&bordureSombre);
   }
-  // Bordure fenêtre de jeu
-  SDL_SetRenderDrawColor(win->renderer,30,30,30,255);
-  SDL_Rect bordureSombre = { depart-50, 0, 50, hauteur};
-  SDL_RenderFillRect(win->renderer,&bordureSombre);
-  bordureSombre = { depart+largeurZoneJeu, 0, 50, hauteur};
-  SDL_RenderFillRect(win->renderer,&bordureSombre);
-
 
   if(mode > 1)
   {
-    left_marge1 = 700;
+    left_marge1 = 970;
+    left_marge2 = 40;
+
+    // zone de jeu 1
+    SDL_Rect *srcFond = win->sprites.at("pattern").get();
+    for(i = left_marge1; i < left_marge1+largeurZoneJeu; i+=srcFond->w)
+    {
+      for(j = 0; j < hauteur; j+=srcFond->h)
+      {
+        SDL_Rect dest = {i,j,srcFond->w,srcFond->h};
+        SDL_RenderCopy(win->renderer,win->pTexture,srcFond,&dest);
+      }
+    }
+    // Bordure fenêtre de jeu 1
+    SDL_SetRenderDrawColor(win->renderer,30,30,30,255);
+    SDL_Rect bordureSombre = { left_marge1-40, 0, 40, hauteur};
+    SDL_RenderFillRect(win->renderer,&bordureSombre);
+    bordureSombre = { left_marge1+largeurZoneJeu, 0, 40, hauteur};
+    SDL_RenderFillRect(win->renderer,&bordureSombre);
+
+    // zone de jeu 2
+    for(i = left_marge2; i < left_marge2+largeurZoneJeu; i+=srcFond->w)
+    {
+      for(j = 0; j < hauteur; j+=srcFond->h)
+      {
+        SDL_Rect dest = {i,j,srcFond->w,srcFond->h};
+        SDL_RenderCopy(win->renderer,win->pTexture,srcFond,&dest);
+      }
+    }
+    // Bordure fenêtre de jeu 2
+    SDL_SetRenderDrawColor(win->renderer,30,30,30,255);
+    bordureSombre = { left_marge2-40, 0, 40, hauteur};
+    SDL_RenderFillRect(win->renderer,&bordureSombre);
+    bordureSombre = { left_marge2+largeurZoneJeu, 0, 40, hauteur};
+    SDL_RenderFillRect(win->renderer,&bordureSombre);
+
   }
 
 
@@ -280,16 +325,10 @@ void Main::draw(int largeur, int hauteur)
       }
   }
 
-  // Placer colonne droite
-
-  // SDL_SetRenderDrawColor(win->renderer,209,141,127,0);
-  // SDL_Rect rightcol = { posBordureDroite, 0, 200, hauteur};
-  // SDL_RenderFillRect(win->renderer,&rightcol);
-
   if(mode > 1)
   {
-    //afficher_colonne(depart+largeurZoneJeu+100, game2);
-    //afficher_colonne(depart+largeurZoneJeu+100, game1);
+    afficher_colonne(left_marge2+largeurZoneJeu+70, game2);
+    afficher_colonne(left_marge1+largeurZoneJeu+70, game1);
   }
   else
   {
@@ -303,8 +342,15 @@ void Main::afficher_colonne(int left_marge, Game game)
   // --------------------------------------- //
   // ---------- AFFICHAGE TEXTES ----------- //
   // --------------------------------------- //
+  SDL_Color color;
 
-  SDL_Color color = { 169, 59, 58 };
+  if(game.getPlayer() == 2) {
+    color = { 169, 59, 58 };
+  }
+  else {
+    color = { 142, 71, 141 };
+  }
+
   //Affichage titre
   SDL_Color colorTitre = { 80, 80, 80 };
   SDL_Surface *surface = TTF_RenderText_Solid(win->font,"TETRIS666", colorTitre);
@@ -356,7 +402,12 @@ void Main::afficher_colonne(int left_marge, Game game)
   rightcol = { left_marge, 570, 190, 180};
   SDL_RenderFillRect(win->renderer,&rightcol);
   // titre
-  color = { 169, 59, 58 };
+  if(game.getPlayer() == 2) {
+    color = { 169, 59, 58 };
+  }
+  else {
+    color = { 142, 71, 141 };
+  }
   surface = TTF_RenderText_Solid(win->font,"PIECE SAUVEGARDEE:", color);
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   dstrect = { left_marge+15, 585, 165, 20 };
@@ -417,7 +468,7 @@ int main(int argc, char** argv)
       if(strcmp(argv[1],"versus") == 0)
         {
             Main m;
-            m.init(2,15,25,1400,1000);
+            m.init(2,15,25,1850,1000);
             m.loop();
             return 0;
         }

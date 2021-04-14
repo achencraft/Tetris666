@@ -22,6 +22,8 @@ class Main
         Game game2;
         int left_marge1;
         int left_marge2;
+        int tailleWarZoneX;
+        int tailleWarZoneY;
 
     public:
         inline Main():

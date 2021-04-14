@@ -2,7 +2,7 @@
 
 Game::Game(){}
 
-void Game::init(int largeur_grille, int hauteur_grille)
+void Game::init(int largeur_grille, int hauteur_grille, int player)
 {
   creer_pieces();
   score = 0;
@@ -10,8 +10,8 @@ void Game::init(int largeur_grille, int hauteur_grille)
   ZePartiiii = false;
   yatilUnePieceEnTrainDeTomber = false;
   yatilUnePieceSauvee = false;
+  quiSuisJe = player;
 
-  
 
   this->hauteur_grille = hauteur_grille;
   this->largeur_grille = largeur_grille;
@@ -152,7 +152,7 @@ void Game::verificationLignes() {
     // si y a autant de boxi que y a de place
     if(fautTilDetruireLeMur[i] == this->largeur_grille) {
       counter += 1;
-      
+
       // ON DETRUIT
       int tailleMur = this->grille.size();
       int idx = 0;
@@ -228,7 +228,9 @@ bool Game::get_yatilUnePieceSauvee()
   return this->yatilUnePieceSauvee;
 }
 
-
+int Game::getPlayer() {
+  return this->quiSuisJe;
+}
 
 void Game::creer_pieces()
 {
