@@ -32,11 +32,11 @@ class Game
 
         // methodes
         void addPieceToTheGrille();
-        void verificationLignes();
-        bool verificationFinJeu();
+        int verificationLignes();
         Piece nouvelle_piece();
         void creer_pieces();
         void sauvegarde_piece();
+
 
 
 
@@ -44,12 +44,13 @@ class Game
         Game();
         void init(int largeur_grille, int hauteur_grille, int player);
         void check_nouvelle_piece();
-        bool actualiser_chute();
+        int actualiser_chute();
         void debuter_partie();
         void droite();
         void gauche();
         void rotation();
         void sauvegarde();
+        void ajouter_ligne(int nbr);
         std::vector<Boxi> get_grille();
         Piece get_piece_courante();
         Piece get_piece_suivante();
@@ -58,6 +59,7 @@ class Game
         bool get_yatilUnePieceSauvee();
         int get_score();
         int getPlayer();
+        bool EstCeFini();
 
 
 

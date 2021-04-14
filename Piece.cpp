@@ -22,23 +22,31 @@ void Piece::poser() {
 
 bool Piece::chuter(int hauteur, std::vector<Boxi> grille)
 {
-  if(this->isPieceOnTheBorderY(hauteur) && this->isPieceOnTheGrilleY(grille)) {
+  if(!this->isPieceOnTheBorderDown(hauteur) && !this->isPieceOnTheGrilleDown(grille)) {
     std::for_each(boxies.begin(),boxies.end(), [] (Boxi &b) {b.chuter();});
     return true;
   }
   return false;
 }
 
+void Piece::up(std::vector<Boxi> grille)
+{
+  if(!this->isPieceOnTheBorderUp() && !this->isPieceOnTheGrilleUp(grille)) {
+    std::for_each(boxies.begin(),boxies.end(), [] (Boxi &b) {b.up();});
+  }
+}
+
+
 void Piece::gauche(int largeur, std::vector<Boxi> grille)
 {
-  if(this->isPieceOnTheBorderLeft(largeur) && this->isPieceOnTheGrilleLeft(grille)) {
+  if(!this->isPieceOnTheBorderLeft(largeur) && !this->isPieceOnTheGrilleLeft(grille)) {
     std::for_each(boxies.begin(),boxies.end(), [] (Boxi &b) {b.gauche();} );
   }
 }
 
 void Piece::droite(int largeur, std::vector<Boxi> grille)
 {
-  if(this->isPieceOnTheBorderRight(largeur) && this->isPieceOnTheGrilleRight(grille)) {
+  if(!this->isPieceOnTheBorderRight(largeur) && !this->isPieceOnTheGrilleRight(grille)) {
     std::for_each(boxies.begin(),boxies.end(), [] (Boxi &b) {b.droite();});
   }
 }
@@ -51,15 +59,25 @@ void Piece::remonter(int largeur, std::vector<Boxi> grille)
   
 }
 
+bool Piece::isPieceOnTheBorderUp() {
+
+  for (size_t i = 0; i < this->boxies.size(); i++) {
+    if(this->boxies[i].get_y() <= 0) {
+      return true;
+    }
+  }
+  return false;
+}
+
 bool Piece::isPieceOnTheBorderLeft(int largeur) {
   // bool isBord = true;
   // bords de l'écran
   for (size_t i = 0; i < this->boxies.size(); i++) {
     if(this->boxies[i].get_x() <= 0) {
-      return false;
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
 bool Piece::isPieceOnTheBorderRight(int largeur) {
@@ -68,22 +86,22 @@ bool Piece::isPieceOnTheBorderRight(int largeur) {
 
   for (size_t i = 0; i < this->boxies.size(); i++) {
     if(this->boxies[i].get_x()+1 >= largeur) {
-      return false;
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
-bool Piece::isPieceOnTheBorderY(int hauteur) {
+bool Piece::isPieceOnTheBorderDown(int hauteur) {
   // bool isBord = true;
   // bords de l'écran
   for (size_t i = 0; i < this->boxies.size(); i++) {
     // std::cout << "y = " << this->boxies[i].get_y() << ", hauteur = " << hauteur << "\n";
-    if(this->boxies[i].get_y() < 0 || this->boxies[i].get_y()+1 >= hauteur) {
-      return false;
+    if(this->boxies[i].get_y()+1 >= hauteur) {
+      return true;
     }
   }
-  return true;
+  return false;
 }
 
 bool Piece::isPieceOnTheGrilleLeft(std::vector<Boxi> grille) {
@@ -93,12 +111,12 @@ bool Piece::isPieceOnTheGrilleLeft(std::vector<Boxi> grille) {
       if(this->boxies[i].get_y() == grille[j].get_y()) {
         // y a une pièce à gauche
         if(this->boxies[i].get_x() == grille[j].get_x()+1) {
-          return false;
+          return true;
         }
       }
     }
   }
-  return true;
+  return false;
 }
 
 bool Piece::isPieceOnTheGrilleRight(std::vector<Boxi> grille) {
@@ -108,26 +126,40 @@ bool Piece::isPieceOnTheGrilleRight(std::vector<Boxi> grille) {
       if(this->boxies[i].get_y() == grille[j].get_y()) {
         // y a une pièce à droite
         if(this->boxies[i].get_x()+1 == grille[j].get_x()) {
-          return false;
+          return true;
         }
       }
     }
   }
-  return true;
+  return false;
 }
 
-bool Piece::isPieceOnTheGrilleY(std::vector<Boxi> grille) {
+bool Piece::isPieceOnTheGrilleDown(std::vector<Boxi> grille) {
   for (size_t i = 0; i < this->boxies.size(); i++) {
     for (size_t j = 0; j < grille.size(); j++) {
       // ils sont sur la même colonne
       if(this->boxies[i].get_x() == grille[j].get_x()) {
         if(this->boxies[i].get_y()+1 == grille[j].get_y()) {
-          return false;
+          return true;
         }
       }
     }
   }
-  return true;
+  return false;
+}
+
+bool Piece::isPieceOnTheGrilleUp(std::vector<Boxi> grille) {
+  for (size_t i = 0; i < this->boxies.size(); i++) {
+    for (size_t j = 0; j < grille.size(); j++) {
+      // ils sont sur la même colonne
+      if(this->boxies[i].get_x() == grille[j].get_x()) {
+        if(this->boxies[i].get_y()-1 == grille[j].get_y()) {
+          return true;
+        }
+      }
+    }
+  }
+  return false;
 }
 
 void Piece::get_piece_dim(int *h, int *w, int *x, int *y)

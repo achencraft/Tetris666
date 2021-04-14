@@ -41,7 +41,7 @@ void Main::loop()
 {
 
   bool quit = false;
-  int w, h;
+  int w, h, cheh1 = 0, cheh2 = 0;
   this->win->get_dimension(&h,&w);
 
   //gestion du temps
@@ -162,15 +162,27 @@ void Main::loop()
 
 
     if (currentTime > lastTime1 + delai_chute1) {
-        quit = game1.actualiser_chute();
+        cheh1 = game1.actualiser_chute();
+        quit = game1.EstCeFini();
         lastTime1 = currentTime;
     }
 
     if (mode > 1 && currentTime > lastTime2 + delai_chute2) {
-        quit = game2.actualiser_chute();
+        cheh2 = game2.actualiser_chute();
+        quit = game2.EstCeFini();
         lastTime2 = currentTime;
     }
 
+    if(mode > 1 && cheh2 > 0) 
+    {
+      game1.ajouter_ligne(cheh2);
+      cheh2 = 0;
+    }
+    if(mode > 1 && cheh1 > 0) 
+    {
+      game2.ajouter_ligne(cheh1);
+      cheh1 = 0;
+    }
 
     //génère l'affichage
     this->draw(w,h);
