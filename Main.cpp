@@ -41,6 +41,7 @@ void Main::loop()
 {
 
   bool quit = false;
+  bool cestPresqueLaFin = false;
   int w, h, cheh1 = 0, cheh2 = 0;
   this->win->get_dimension(&h,&w);
 
@@ -159,8 +160,6 @@ void Main::loop()
     game1.check_nouvelle_piece();
     if(mode > 1) { game2.check_nouvelle_piece(); }
 
-
-
     if (currentTime > lastTime1 + delai_chute1) {
         cheh1 = game1.actualiser_chute();
         quit = game1.EstCeFini();
@@ -173,12 +172,12 @@ void Main::loop()
         lastTime2 = currentTime;
     }
 
-    if(mode > 1 && cheh2 > 0) 
+    if(mode > 1 && cheh2 > 0)
     {
       game1.ajouter_ligne(cheh2);
       cheh2 = 0;
     }
-    if(mode > 1 && cheh1 > 0) 
+    if(mode > 1 && cheh1 > 0)
     {
       game2.ajouter_ligne(cheh1);
       cheh1 = 0;
@@ -192,12 +191,43 @@ void Main::loop()
 
 
   }
-  // --------------------------------------- //
-  // ---------- THIS IS THE EEEND ---------- //
-  // --------------------------------------- //
 
+  std::cout << "But in the end it doesn't even matter... *linkin park playing in the background*\n" ;
 
-  std::cout << "But in the end it doesn't even matter... *liniking park playing in the background\n" ;
+  // j'ai menti c pas fini
+  while(!cestPresqueLaFin) {
+
+    SDL_Event event;
+    while (!cestPresqueLaFin && SDL_PollEvent(&event))
+    {
+      switch (event.type)
+      {
+        case SDL_QUIT:
+          cestPresqueLaFin = true;
+          break;
+
+        case SDL_KEYDOWN:
+          switch(event.key.keysym.sym)
+          {
+            case SDLK_ESCAPE:
+              cestPresqueLaFin = true;
+              std::cout << "svp??? je peux quitter???\n";
+              break;
+            default: break;
+          }
+        default: break;
+      }
+    }
+
+    // --------------------------------------- //
+    // ---------- THIS IS THE EEEND ---------- //
+    // --------------------------------------- //
+    this->drawEndScreen();
+    // affiche la surface
+    SDL_RenderPresent(win->renderer);
+
+  }
+
   SDL_Quit();
 }
 
@@ -440,6 +470,90 @@ void Main::afficher_colonne(int left_marge, Game game)
     }
   }
 
+}
+
+void Main::drawEndScreen() {
+  // //on efface la fenêtre
+  SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
+  SDL_RenderClear(win->renderer);
+  // on dessine le fond
+  SDL_SetRenderDrawColor(win->renderer,25,25,25,255);
+  SDL_Rect cestLaFinLesZamis = { 0, 0, tailleWarZoneX, tailleWarZoneY};
+  SDL_RenderFillRect(win->renderer,&cestLaFinLesZamis);
+  SDL_Rect *srcFond = win->sprites.at("pattern").get();
+  for(int i = 0; i < tailleWarZoneX; i+=srcFond->w)
+  {
+    for(int j = 0; j < tailleWarZoneY; j+=srcFond->h)
+    {
+      SDL_Rect dest = {i,j,srcFond->w,srcFond->h};
+      SDL_RenderCopy(win->renderer,win->pTexture,srcFond,&dest);
+    }
+  }
+  // le bloc de texte
+  int grandeur = 200;
+  int epaisseur = 400;
+  int topDepartEnX = (tailleWarZoneX - epaisseur)/2;
+  int topDepartEnY = (tailleWarZoneY - grandeur)/2;
+  SDL_SetRenderDrawColor(win->renderer,30,30,30,255);
+  cestLaFinLesZamis = { topDepartEnX-30, topDepartEnY-30, epaisseur+60, grandeur+60};
+  SDL_RenderFillRect(win->renderer,&cestLaFinLesZamis);
+  SDL_SetRenderDrawColor(win->renderer,20,20,20,255);
+  cestLaFinLesZamis = { topDepartEnX, topDepartEnY, epaisseur, grandeur};
+  SDL_RenderFillRect(win->renderer,&cestLaFinLesZamis);
+  // Ze texte
+  SDL_Color color = { 169, 59, 58 };
+  SDL_Surface *surface = TTF_RenderText_Solid(win->font,"APPUIE SUR ECHAP POUR QUITTER", color);
+  SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+  SDL_Rect dstrect = { topDepartEnX-30, topDepartEnY+grandeur+45, 460, 45 };
+  SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  if (mode > 1) {
+    int zblehExploseeee;
+    int unScoreScoreux;
+    if(game1.get_score() > game2.get_score()) {
+      zblehExploseeee = 1;
+      unScoreScoreux = game1.get_score();
+    }
+    else {
+      zblehExploseeee = 2;
+      unScoreScoreux = game2.get_score();
+    }
+    color = { 174, 174, 174 };
+    std::string endCreditsWinner = "JOUEUR" + std::to_string(zblehExploseeee) + " A GAGNE";
+    std::string theFinalScore = std::to_string(unScoreScoreux) + " POINTS";
+    // Affichage texte
+    surface = TTF_RenderText_Solid(win->font,endCreditsWinner.c_str(), color);
+    texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+    dstrect = { topDepartEnX+25, topDepartEnY+25, 350, 55 };
+    SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+    surface = TTF_RenderText_Solid(win->font,"AVEC", color);
+    texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+    dstrect = { topDepartEnX+155, topDepartEnY+82, 90, 35 };
+    SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+    color = { 142, 71, 141 };
+    surface = TTF_RenderText_Solid(win->font,theFinalScore.c_str(), color);
+    texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+    dstrect = { topDepartEnX+95, topDepartEnY+135, 210, 50 };
+    SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+
+  }
+  else {
+    color = { 174, 174, 174 };
+    std::string theFinalScore = std::to_string(game1.get_score()) + " POINTS";
+    // Affichage texte
+    surface = TTF_RenderText_Solid(win->font,"PARTIE TERMINEE", color);
+    texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+    dstrect = { topDepartEnX+33, topDepartEnY+25, 340, 50 };
+    SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+    surface = TTF_RenderText_Solid(win->font,"AVEC", color);
+    texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+    dstrect = { topDepartEnX+155, topDepartEnY+82, 90, 35 };
+    SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+    color = { 142, 71, 141 };
+    surface = TTF_RenderText_Solid(win->font,theFinalScore.c_str(), color);
+    texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+    dstrect = { topDepartEnX+95, topDepartEnY+135, 210, 50 };
+    SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  }
 }
 
 void Main::draw_boxi(int x, int y, int taille, SDL_Color color, int left_marge)
