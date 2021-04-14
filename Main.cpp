@@ -44,6 +44,9 @@ void Main::loop()
   //gestion du temps
   unsigned int lastTime1 = 0, delai_chute1 = 1000, currentTime;
   unsigned int lastTime2 = 0, delai_chute2 = 1000;
+  unsigned int lastTime3 = 0, delai_chute3 = 333;
+  if(mode == 4) delai_chute3 = 0;
+  
 
   while(!quit)
   {
@@ -55,11 +58,11 @@ void Main::loop()
       switch (event.type)
       {
         case SDL_QUIT:
-        quit = true;
-        break;
+          quit = true;
+          break;
         case SDL_MOUSEBUTTONDOWN:
-        printf("mouse click %d\n", event.button.button);
-        break;
+          printf("mouse click %d\n", event.button.button);
+          break;
         case SDL_KEYUP:
           switch (event.key.keysym.sym)
           {
@@ -83,20 +86,20 @@ void Main::loop()
             game1.sauvegarde();
             break;
           case SDLK_a:
-            if(mode > 1) { game2.sauvegarde(); }
-          break;
+            if(mode == 2) { game2.sauvegarde(); }
+           break;
           case SDLK_z:
-            if(mode > 1) { game2.rotation(); }
-          break;
+            if(mode == 2) { game2.rotation(); }
+           break;
           case SDLK_q:
-            if(mode > 1) { game2.gauche(); }
-          break;
+            if(mode == 2) { game2.gauche(); }
+           break;
           case SDLK_s:
-            if(mode > 1) { delai_chute2 = 1000; }
-          break;
+            if(mode == 2) { delai_chute2 = 1000; }
+           break;
           case SDLK_d:
-            if(mode > 1) { game2.droite(); }
-          break;
+            if(mode == 2) { game2.droite(); }
+            break;
           default:
             break;
           }
@@ -109,19 +112,45 @@ void Main::loop()
             delai_chute1 = 50;
             break;
           case SDLK_s:
-            if(mode > 1) { delai_chute2 = 50; }
-          break;
+            if(mode == 2) { delai_chute2 = 50; }
+            break;
           default:
             break;
           }
-
-        break;
+          break;
         default: break;
       }
     }
     const Uint8* state = SDL_GetKeyboardState(NULL);
     quit |= (state[SDL_SCANCODE_ESCAPE]!=0);
 
+
+    //IA idiote
+    
+    if(mode >= 3 && currentTime > lastTime3 + delai_chute3)
+    {
+      struct timeval timer;
+      gettimeofday(&timer, NULL);
+      srand(timer.tv_usec);
+      int choix = (rand() % 9)+1; //entre 1 et 9 inclus
+
+      delai_chute2 = (rand() % 1000) + 100;
+
+      
+      if(choix == 5)
+      {
+        game2.rotation();
+      } else {
+        if(choix % 2 == 0)
+        {
+          game2.gauche();
+        } else {
+          game2.droite();
+        }
+        
+      }
+      lastTime3 = currentTime;
+    }
 
     //on vérifie si une nouvelle pièce doit etre générée
     game1.check_nouvelle_piece();
@@ -396,6 +425,13 @@ int main(int argc, char** argv)
         {
             Main m;
             m.init(3,15,25,1400,1000);
+            m.loop();
+            return 0;
+        }
+      if(strcmp(argv[1],"carnage") == 0)
+        {
+            Main m;
+            m.init(4,15,25,1400,1000);
             m.loop();
             return 0;
         }
