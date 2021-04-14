@@ -197,7 +197,7 @@ void Main::draw(int largeur, int hauteur)
     }
   }
   // Bordure fenêtre de jeu
-  SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
+  SDL_SetRenderDrawColor(win->renderer,30,30,30,255);
   SDL_Rect bordureSombre = { depart-50, 0, 50, hauteur};
   SDL_RenderFillRect(win->renderer,&bordureSombre);
   bordureSombre = { depart+largeurZoneJeu, 0, 50, hauteur};
