@@ -13,6 +13,7 @@ class Piece
         Piece(std::vector<Boxi> motif, int largeur);
         std::vector<Boxi> *get_boxies();
         bool chuter(int hauteur, std::vector<Boxi> grille);
+        void up(std::vector<Boxi> grille);
         void gauche(int largeur, std::vector<Boxi> grille);
         void droite(int largeur, std::vector<Boxi> grille);
         void rotation(int largeur, int hauteur, std::vector<Boxi> grille);
@@ -22,10 +23,12 @@ class Piece
         // verif
         bool isPieceOnTheBorderLeft(int largeur);
         bool isPieceOnTheBorderRight(int largeur);
-        bool isPieceOnTheBorderY(int hauteur);
+        bool isPieceOnTheBorderDown(int hauteur);
+        bool isPieceOnTheBorderUp();
         bool isPieceOnTheGrilleLeft(std::vector<Boxi> grille);
         bool isPieceOnTheGrilleRight(std::vector<Boxi> grille);
-        bool isPieceOnTheGrilleY(std::vector<Boxi> grille);
+        bool isPieceOnTheGrilleDown(std::vector<Boxi> grille);
+        bool isPieceOnTheGrilleUp(std::vector<Boxi> grille);
         bool isRotaValid(int largeur, int hauteur, std::vector<Boxi> grille);
         void get_piece_dim(int *h, int *w, int *x, int *y);
 

@@ -3,7 +3,11 @@
 Boxi::Boxi() {}
 
 Boxi::Boxi(std::string s, int x, int y, SDL_Color color) :
-  sprite(s), x(x), y(y), color(color)
+  sprite(s), x(x), y(y), color(color), final(false)
+  {}
+
+Boxi::Boxi(std::string s, int x, int y, SDL_Color color, bool final) :
+  sprite(s), x(x), y(y), color(color), final(final)
   {}
 
 int Boxi::get_x() {
@@ -21,6 +25,10 @@ int Boxi::get_tx() {
 
 int Boxi::get_ty() {
   return tmp_y;
+}
+
+bool Boxi::get_final() {
+  return final;
 }
 
 SDL_Color Boxi::get_color()
@@ -54,6 +62,12 @@ void Boxi::chuter()
 {
     y = y + 1;
 }
+
+void Boxi::up()
+{
+    y = y - 1;
+}
+
 
 void Boxi::gauche()
 {

@@ -50,7 +50,7 @@ void Game::check_nouvelle_piece()
     }
 }
 
-bool Game::actualiser_chute()
+int Game::actualiser_chute()
 {
   JustSpawned = false;
   //actualise la position des boxies
@@ -62,10 +62,9 @@ bool Game::actualiser_chute()
     // on dit que y a plus de pièce du coup
     this->yatilUnePieceDansLavion = true;
     this->yatilUnePieceEnTrainDeTomber = false;
-    this->verificationLignes();
-    return this->verificationFinJeu();
+    return this->verificationLignes();
   }
-  return false;
+  return 0;
 }
 
 void Game::debuter_partie()
@@ -104,6 +103,23 @@ void Game::sauvegarde()
     this->piece_courante.remonter(this->largeur_grille, this->grille);
 }
 
+
+void Game::ajouter_ligne(int nbr)
+{
+  for(int j = 0; j < nbr; j++)
+  {
+    std::for_each(this->grille.begin(),this->grille.end(), [] (Boxi &b) {b.up();});
+    this->piece_courante.up(this->grille);
+
+    //ajouter une ligne
+    SDL_Color color = {128,128,128,255};
+    for(int i = 0; i < this->largeur_grille; i++)
+    {
+      this->grille.insert(this->grille.end(),Boxi("boxi",i,this->hauteur_grille-1,color,true));
+    }
+  }
+}
+
 void Game::sauvegarde_piece()
 {
     int hauteur_piece,largeur_piece,min_x,min_y;
@@ -134,7 +150,7 @@ void Game::addPieceToTheGrille() {
   }
 }
 
-void Game::verificationLignes() {
+int Game::verificationLignes() {
   // tableau qui pour chaque ligne dit combien y a de boxies
   int fautTilDetruireLeMur[this->hauteur_grille];
   for (size_t i = 0; i < this->hauteur_grille; i++) {
@@ -143,7 +159,7 @@ void Game::verificationLignes() {
   // on remplit le tableau du coup
   for (size_t i = 0; i < this->grille.size(); i++) {
     Boxi boxi = this->grille[i];
-    fautTilDetruireLeMur[boxi.get_y()]++;
+    if(!boxi.get_final()) fautTilDetruireLeMur[boxi.get_y()]++;
   }
 
   int counter = 0;
@@ -174,11 +190,15 @@ void Game::verificationLignes() {
     }
   }
 
-  this->score += (counter*100)*counter;
-  std::cout << "Score = " << this->score << "\n";
+  if(counter > 0)
+  {
+    this->score += (counter*100)*counter;
+    std::cout << "Score = " << this->score << "\n";
+  }
+  return counter;
 }
 
-bool Game::verificationFinJeu() {
+bool Game::EstCeFini() {
   // on parcourt les picèes en partant de la fin
   // on trouvera plus vite si la dernière posée est perdante ou pas
   // à terme on pourrait juste checker le nombre max de bloc que peut faire une pièce
