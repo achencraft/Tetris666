@@ -146,12 +146,13 @@ void Game::verificationLignes() {
     fautTilDetruireLeMur[boxi.get_y()]++;
   }
 
+  int counter = 0;
   // on regarde chaque ligne
   for (size_t i = 0; i < this->hauteur_grille; i++) {
     // si y a autant de boxi que y a de place
     if(fautTilDetruireLeMur[i] == this->largeur_grille) {
-      this->score += 100;
-      std::cout << "Score = " << this->score << "\n";
+      counter += 1;
+      
       // ON DETRUIT
       int tailleMur = this->grille.size();
       int idx = 0;
@@ -172,6 +173,9 @@ void Game::verificationLignes() {
       }
     }
   }
+
+  this->score += (counter*100)*counter;
+  std::cout << "Score = " << this->score << "\n";
 }
 
 bool Game::verificationFinJeu() {
