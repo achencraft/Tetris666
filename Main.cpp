@@ -211,7 +211,7 @@ void Main::loop()
           {
             case SDLK_ESCAPE:
               cestPresqueLaFin = true;
-              std::cout << "svp??? je peux quitter???\n";
+              std::cout << "Here we are, Samwise Gamgee, here at the end of all things! Adieu\n";
               break;
             default: break;
           }
