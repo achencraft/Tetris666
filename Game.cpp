@@ -174,6 +174,7 @@ int Game::verificationLignes() {
       int idx = 0;
       while(idx < tailleMur) {
         if(this->grille[idx].get_y() == i) {
+          Boxi adieuPetitBoxi = this->grille[idx];
           this->grille.erase(this->grille.begin()+idx);
           tailleMur = this->grille.size();
         }

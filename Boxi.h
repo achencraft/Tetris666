@@ -12,6 +12,9 @@ class Boxi {
         Boxi(std::string s, int x, int y, SDL_Color color);
         Boxi(std::string s, int x, int y, SDL_Color color, bool final);
 
+        // destructeur
+        // ~Boxi();
+
         //méthodes
         int get_x();
         int get_y();
