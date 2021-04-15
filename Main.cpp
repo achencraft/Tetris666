@@ -601,14 +601,14 @@ int main(int argc, char** argv)
       if(strcmp(argv[1],"ordi") == 0)
         {
             Main m;
-            m.init(3,15,25,1400,1000);
+            m.init(3,15,25,1850,1000);
             m.loop();
             return 0;
         }
       if(strcmp(argv[1],"carnage") == 0)
         {
             Main m;
-            m.init(4,15,25,1400,1000);
+            m.init(4,15,25,1850,1000);
             m.loop();
             return 0;
         }
