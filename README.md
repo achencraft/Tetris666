@@ -10,12 +10,12 @@ Le projet doit respecter les règles de la version originale avec un gameplay s'
 approche le plus possible.
 
 Il y a le mode marathon classique, mais également 1v1 (pour jouer à deux pour
-deux fois plus de fun) ainsi qu'un mode vs IA (nous espérons avoir pu mettre à -
+deux fois plus de fun) ainsi qu'un mode vs IA (nous espérons avoir pu mettre à
 profits nos connaissances acquises en cours d'IA le semestre dernier!) *(c'est pas
 vrai, c'est pas une IA très intelligente)* ainsi qu'un mode spécial et secret
 accessible à qui se sent d'humeur aventureuse: le mode Carnage.
 
-Bon jeu à vous! N'hésitez pas à nous partager vos high-score pour voir qui est  
+Bon jeu à vous! N'hésitez pas à nous partager vos high-score pour voir qui est
 destiné à devenir le prochain Grand Maître Tetris.
 
 ## Installations
