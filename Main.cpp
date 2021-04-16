@@ -1,9 +1,10 @@
 #include "Main.h"
 
+// ----------------------------------------------- //
+// ------------ INITIALISATION DU JEU ------------ //
+// ----------------------------------------------- //
 
-
-
-void Main::init(int mode, int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int tailleZoneJeuY)
+void Main::init(int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int tailleZoneJeuY)
 {
     win = new WindowSurface("Tetris666",tailleZoneJeuX,tailleZoneJeuY);
     win->ajouter_sprite("fond",Sprite({0,0,10,10}));
@@ -12,7 +13,6 @@ void Main::init(int mode, int largeur_grille, int hauteur_grille, int tailleZone
     win->ajouter_sprite("boxi",Sprite({299,0,40,40}));
     this->hauteur_grille = hauteur_grille;
     this->largeur_grille = largeur_grille;
-    this->mode = mode;
     int taille_boxi = 1000/hauteur_grille;
     int largeurZoneJeu = taille_boxi*largeur_grille;
 
@@ -21,8 +21,13 @@ void Main::init(int mode, int largeur_grille, int hauteur_grille, int tailleZone
     tailleWarZoneY = tailleZoneJeuY;
 
     // Marge de gauche
-    left_marge1 = (1400 - largeurZoneJeu)/2;
+    left_marge1 = (1850 - largeurZoneJeu)/2;
     left_marge2 = 0;
+
+    // Accès au menu
+    this->drawMenu();
+
+    // std::cout << "bjr\n";
 
     Game g1,g2;
     this->game1 = g1;
@@ -33,37 +38,44 @@ void Main::init(int mode, int largeur_grille, int hauteur_grille, int tailleZone
       game2.init(largeur_grille, hauteur_grille,2);
     }
 
+    // std::cout << "bjr\n";
 }
 
 
-
+// ----------------------------------------------- //
+// -------------- BOUCLE PRINCIPALE -------------- //
+// ----------------------------------------------- //
 
 void Main::loop()
 {
-
   bool quit = false;
   bool cestPresqueLaFin = false;
   int w, h, cheh1 = 0, cheh2 = 0;
   this->win->get_dimension(&h,&w);
 
-  //gestion du temps
+  // Gestion du temps
   unsigned int lastTime1 = 0, delai_chute1 = 1000, currentTime;
   unsigned int lastTime2 = 0, delai_chute2 = 1000;
   unsigned int lastTime3 = 0, delai_chute3 = 333;
   if(mode == 4) delai_chute3 = 0;
 
-  SDL_Event event;    
+  SDL_Event event;
+
+  // -------- BOUCLE --------- //
+
   while(!quit)
   {
     currentTime = SDL_GetTicks();
 
-    
+
     while (!quit && SDL_PollEvent(&event))
     {
       switch (event.type)
       {
         case SDL_QUIT:
-          quit = true;
+          // On s'en va
+          SDL_Quit();
+          exit(0);
           break;
         case SDL_MOUSEBUTTONDOWN:
           printf("mouse click %d\n", event.button.button);
@@ -130,7 +142,7 @@ void Main::loop()
     quit |= (state[SDL_SCANCODE_ESCAPE]!=0);
 
 
-    //IA idiote
+    // IA idiote
 
     if(mode >= 3 && currentTime > lastTime3 + delai_chute3)
     {
@@ -157,7 +169,7 @@ void Main::loop()
       lastTime3 = currentTime;
     }
 
-    //on vérifie si une nouvelle pièce doit etre générée
+    // On vérifie si une nouvelle pièce doit etre générée
     game1.check_nouvelle_piece();
     if(mode > 1) { game2.check_nouvelle_piece(); }
 
@@ -185,6 +197,7 @@ void Main::loop()
     }
 
     //génère l'affichage
+    // std::cout << "bjr\n";
     this->draw(w,h);
 
     // affiche la surface
@@ -195,7 +208,8 @@ void Main::loop()
 
   std::cout << "But in the end it doesn't even matter... *linkin park playing in the background*\n" ;
 
-  // j'ai menti c pas fini
+  // ------ ECRAN DE FIN ----- //
+
   while(!cestPresqueLaFin) {
 
     SDL_Event event;
@@ -212,7 +226,7 @@ void Main::loop()
           {
             case SDLK_ESCAPE:
               cestPresqueLaFin = true;
-              std::cout << "Here we are, Samwise Gamgee, here at the end of all things! Adieu\n";
+              // std::cout << "Here we are, Samwise Gamgee, here at the end of all things\n";
               break;
             default: break;
           }
@@ -220,9 +234,8 @@ void Main::loop()
       }
     }
 
-    // --------------------------------------- //
-    // ---------- THIS IS THE EEEND ---------- //
-    // --------------------------------------- //
+    // ------- FIN DU JEU ------- //
+
     this->drawEndScreen();
     // affiche la surface
     SDL_RenderPresent(win->renderer);
@@ -232,8 +245,13 @@ void Main::loop()
   SDL_Quit();
 }
 
+// ----------------------------------------------- //
+// ------------ FONCTION DRAW DU JEU ------------- //
+// ----------------------------------------------- //
+
 void Main::draw(int largeur, int hauteur)
 {
+
   int i, j, taille_boxi;
   taille_boxi = hauteur/hauteur_grille;
   int largeurZoneJeu = taille_boxi*this->largeur_grille;
@@ -244,9 +262,7 @@ void Main::draw(int largeur, int hauteur)
   SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
   SDL_RenderClear(win->renderer);
 
-  // --------------------------------------- //
   // ---------- AFFICHAGE SPRITES ---------- //
-  // --------------------------------------- //
 
   // Fond sombre
   SDL_Rect *srcBackground = win->sprites.at("fond").get();
@@ -327,7 +343,7 @@ void Main::draw(int largeur, int hauteur)
   }
 
 
-  //placer les boxies placés
+  // Placer les boxies placés
   std::vector<Boxi> grille1 = game1.get_grille();
   for (size_t i = 0; i < grille1.size(); i++) {
     Boxi boxi = grille1[i];
@@ -335,7 +351,7 @@ void Main::draw(int largeur, int hauteur)
     draw_boxi(boxi.get_x(), boxi.get_y(), taille_boxi, color, left_marge1);
   }
 
-  //placer la pièce qui tombe
+  // Placer la pièce qui tombe
   if(this->game1.get_yatilUnePieceEnTrainDeTomber()) {
     Piece piece_courante1 = game1.get_piece_courante();
     std::vector<Boxi> *piece = piece_courante1.get_boxies();
@@ -348,7 +364,7 @@ void Main::draw(int largeur, int hauteur)
 
   if(mode > 1)
   {
-      //placer les boxies placés
+      // Placer les boxies placés
       std::vector<Boxi> grille2 = game2.get_grille();
       for (size_t i = 0; i < grille2.size(); i++) {
         Boxi boxi = grille2[i];
@@ -356,7 +372,7 @@ void Main::draw(int largeur, int hauteur)
         draw_boxi(boxi.get_x(), boxi.get_y(), taille_boxi, color, left_marge2);
       }
 
-      //placer la pièce qui tombe
+      // Placer la pièce qui tombe
       if(this->game2.get_yatilUnePieceEnTrainDeTomber()) {
         Piece piece_courante2 = game2.get_piece_courante();
         std::vector<Boxi> *piece = piece_courante2.get_boxies();
@@ -368,8 +384,11 @@ void Main::draw(int largeur, int hauteur)
       }
   }
 
+  // -------------- COLONNE DE DROITE -------------- //
+
   if(mode > 1)
   {
+    // std::cout << "bjr\n";
     afficher_colonne(left_marge2+largeurZoneJeu+70, game2);
     afficher_colonne(left_marge1+largeurZoneJeu+70, game1);
   }
@@ -380,12 +399,14 @@ void Main::draw(int largeur, int hauteur)
 
 }
 
+// ----------------------------------------------- //
+// ---------- AFFICHAGE BARRE LATERALE ----------- //
+// ----------------------------------------------- //
+
 void Main::afficher_colonne(int left_marge, Game game)
 {
-  // --------------------------------------- //
-  // ---------- AFFICHAGE TEXTES ----------- //
-  // --------------------------------------- //
   SDL_Color color;
+
 
   if(game.getPlayer() == 2) {
     color = { 169, 59, 58 };
@@ -394,7 +415,7 @@ void Main::afficher_colonne(int left_marge, Game game)
     color = { 142, 71, 141 };
   }
 
-  //Affichage titre
+  // --- Affichage titre ---- //
   SDL_Color colorTitre = { 80, 80, 80 };
   SDL_Surface *surface = TTF_RenderText_Solid(win->font,"TETRIS666", colorTitre);
   SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
@@ -425,7 +446,7 @@ void Main::afficher_colonne(int left_marge, Game game)
   SDL_DestroyTexture(texture);
   SDL_FreeSurface(surface);
 
-  //Affichage pièce suivante
+  // ---- Affichage pièce suivante ---- //
   // carré fond noir
   SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
   rightcol = { left_marge, 340, 190, 180};
@@ -438,7 +459,7 @@ void Main::afficher_colonne(int left_marge, Game game)
   SDL_DestroyTexture(texture);
   SDL_FreeSurface(surface);
 
-  //placer la prochaine pièce
+  // ---- Placer la prochaine pièce ---- //
   Piece piece_suivante = game.get_piece_suivante();
   std::vector<Boxi> *piece = piece_suivante.get_boxies();
   color = piece_suivante.get_color();
@@ -447,7 +468,7 @@ void Main::afficher_colonne(int left_marge, Game game)
     draw_boxi_right(-15,420,piece->at(i).get_x(), piece->at(i).get_y(), 15,color, left_marge);
   }
 
-  //Affichage pièce sauvegardée
+  // ---- Affichage pièce sauvegardée ---- //
   // carré fond noir
   SDL_SetRenderDrawColor(win->renderer,24,24,24,255);
   rightcol = { left_marge, 570, 190, 180};
@@ -466,12 +487,13 @@ void Main::afficher_colonne(int left_marge, Game game)
   SDL_DestroyTexture(texture);
   SDL_FreeSurface(surface);
 
-  //placer la piece sauvegardee
+  // ---- Placer la piece sauvegardee ---- //
   if(game.get_yatilUnePieceSauvee())
   {
     int hauteur_piece,largeur_piece,min_x,min_y;
     Piece piece_sauvegarde = game.get_piece_sauvegarde();
     std::vector<Boxi> *piece = piece_sauvegarde.get_boxies();
+    // std::cout << "bjr\n";
     piece_sauvegarde.get_piece_dim(&hauteur_piece,&largeur_piece,&min_x,&min_y);
     SDL_Color color = piece_sauvegarde.get_color();
 
@@ -480,15 +502,217 @@ void Main::afficher_colonne(int left_marge, Game game)
       draw_boxi_right(-15,635,piece->at(i).get_x()-min_x+6, piece->at(i).get_y()-min_y+1, 15, color, left_marge);
     }
   }
-  
-
 }
 
+// ------------------------------------------------- //
+// ----------------- MENU D'ACCUEIL ---------------- //
+// ------------------------------------------------- //
+
+void Main::drawMenu() {
+  int quelEstTonChoix = 0;
+  int nbChoix = 4;
+  int theChoosenHasBeenChoosen = false;
+
+  while(!theChoosenHasBeenChoosen) {
+
+    SDL_Event event;
+    while(!theChoosenHasBeenChoosen && SDL_PollEvent(&event)) {
+      // Evenements
+      switch (event.type)
+      {
+        case SDL_QUIT:
+          // On s'en va
+          SDL_Quit();
+          exit(0);
+          break;
+
+        case SDL_KEYDOWN:
+          switch(event.key.keysym.sym)
+          {
+            case SDLK_DOWN:
+              {
+                quelEstTonChoix = (quelEstTonChoix + 1)%nbChoix;
+                // std::cout << "Mode suivant = " << quelEstTonChoix << "\n";
+                break;
+              }
+            case SDLK_UP:
+              {
+                quelEstTonChoix = (quelEstTonChoix - 1);
+                if(quelEstTonChoix < 0) {
+                  quelEstTonChoix = 3;
+                }
+                // std::cout << "Mode précédent = " << quelEstTonChoix << "\n";
+                break;
+              }
+            case SDLK_RETURN:
+              {
+                std::cout << "Mode choisi = " << quelEstTonChoix+1 << "\n";
+                this->mode = quelEstTonChoix+1;
+                theChoosenHasBeenChoosen = true;
+                break;
+              }
+            default: break;
+          }
+        default: break;
+      }
+    }
+
+    // On efface la fenêtre
+    SDL_SetRenderDrawColor(win->renderer,19,19,19,255);
+    SDL_RenderClear(win->renderer);
+
+    // ---- On dessine le fond ---- //
+    // Déco blocs
+    SDL_Rect *srcTetris = win->sprites.at("deco").get();
+    for(int i = 0; i < 1400; i+=1056)
+    {
+      int j = 1000-287;
+      SDL_Rect dest = {i,j,srcTetris->w,srcTetris->h};
+      SDL_RenderCopy(win->renderer,win->pTexture,srcTetris,&dest);
+    }
+    // --- Affichage titre ---- //
+    SDL_Color colorTitre = { 169, 59, 58 };
+    SDL_Surface *surface = TTF_RenderText_Solid(win->font,"TETRIS666", colorTitre);
+    SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+    SDL_Rect dstrect = { (tailleWarZoneX-600)/2, 100, 600, 100 };
+    SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
+
+    SDL_Color color = { 100, 100, 100 };
+    SDL_Color colorSelect = { 95, 128, 144 };
+    int marginTop = 300;
+    switch (quelEstTonChoix) {
+      case 0:
+        {
+          SDL_Surface *surface = TTF_RenderText_Solid(win->font,"> MODE SOLO <", colorSelect);
+          SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          SDL_Rect dstrect = { (tailleWarZoneX-250)/2, marginTop, 250, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"MODE 1V1", color);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-170)/2, marginTop+60, 170, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"MODE VS IA", color);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-180)/2, marginTop+120, 180, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"MODE CARNAGE", color);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-250)/2, marginTop+180, 250, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          break;
+        }
+      case 1:
+        {
+          SDL_Surface *surface = TTF_RenderText_Solid(win->font,"MODE SOLO", color);
+          SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          SDL_Rect dstrect = { (tailleWarZoneX-185)/2, marginTop, 185, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"> MODE 1V1 <", colorSelect);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-235)/2, marginTop+60, 235, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"MODE VS IA", color);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-180)/2, marginTop+120, 180, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"MODE CARNAGE", color);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-250)/2, marginTop+180, 250, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          break;
+        }
+      case 2:
+        {
+          SDL_Surface *surface = TTF_RenderText_Solid(win->font,"MODE SOLO", color);
+          SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          SDL_Rect dstrect = { (tailleWarZoneX-185)/2, marginTop, 185, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"MODE 1V1", color);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-170)/2, marginTop+60, 170, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"> MODE VS IA <", colorSelect);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-245)/2, marginTop+120, 245, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"MODE CARNAGE", color);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-250)/2, marginTop+180, 250, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          break;
+        }
+      case 3:
+        {
+          SDL_Surface *surface = TTF_RenderText_Solid(win->font,"MODE SOLO", color);
+          SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          SDL_Rect dstrect = { (tailleWarZoneX-185)/2, marginTop, 185, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"MODE 1V1", color);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-170)/2, marginTop+60, 170, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"MODE VS IA", color);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-180)/2, marginTop+120, 180, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          surface = TTF_RenderText_Solid(win->font,"> MODE CARNAGE <", colorSelect);
+          texture = SDL_CreateTextureFromSurface(win->renderer, surface);
+          dstrect = { (tailleWarZoneX-305)/2, marginTop+180, 305, 45 };
+          SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+          SDL_DestroyTexture(texture);
+          SDL_FreeSurface(surface);
+          break;
+        }
+      default: break;
+    }
+
+    SDL_RenderPresent(win->renderer);
+
+  }
+}
+
+// ------------------------------------------------- //
+// -------------- ECRAN DE FIN DE JEU -------------- //
+// ------------------------------------------------- //
+
 void Main::drawEndScreen() {
-  // //on efface la fenêtre
+  // On efface la fenêtre
   SDL_SetRenderDrawColor(win->renderer,0,0,0,255);
   SDL_RenderClear(win->renderer);
-  // on dessine le fond
+
+  // ---- On dessine le fond ---- //
   SDL_SetRenderDrawColor(win->renderer,25,25,25,255);
   SDL_Rect cestLaFinLesZamis = { 0, 0, tailleWarZoneX, tailleWarZoneY};
   SDL_RenderFillRect(win->renderer,&cestLaFinLesZamis);
@@ -501,7 +725,8 @@ void Main::drawEndScreen() {
       SDL_RenderCopy(win->renderer,win->pTexture,srcFond,&dest);
     }
   }
-  // le bloc de texte
+
+  // ---- Bloc qui contient le texte ---- //
   int grandeur = 200;
   int epaisseur = 400;
   int topDepartEnX = (tailleWarZoneX - epaisseur)/2;
@@ -512,12 +737,16 @@ void Main::drawEndScreen() {
   SDL_SetRenderDrawColor(win->renderer,20,20,20,255);
   cestLaFinLesZamis = { topDepartEnX, topDepartEnY, epaisseur, grandeur};
   SDL_RenderFillRect(win->renderer,&cestLaFinLesZamis);
-  // Ze texte
+  // ---- Texte rouge qui indique comment on quitte ---- //
   SDL_Color color = { 169, 59, 58 };
   SDL_Surface *surface = TTF_RenderText_Solid(win->font,"APPUIE SUR ECHAP POUR QUITTER", color);
   SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   SDL_Rect dstrect = { topDepartEnX-30, topDepartEnY+grandeur+45, 460, 45 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  SDL_DestroyTexture(texture);
+  SDL_FreeSurface(surface);
+
+  // ---- Affichage du vainqueur selon le mode de jeu ---- //
   if (mode > 1) {
     int zblehExploseeee;
     int unScoreScoreux;
@@ -529,29 +758,35 @@ void Main::drawEndScreen() {
       zblehExploseeee = 2;
       unScoreScoreux = game2.get_score();
     }
+    // ---- Affichage de fin ---- //
     color = { 174, 174, 174 };
     std::string endCreditsWinner = "JOUEUR" + std::to_string(zblehExploseeee) + " A GAGNE";
     std::string theFinalScore = std::to_string(unScoreScoreux) + " POINTS";
-    // Affichage texte
     surface = TTF_RenderText_Solid(win->font,endCreditsWinner.c_str(), color);
     texture = SDL_CreateTextureFromSurface(win->renderer, surface);
     dstrect = { topDepartEnX+25, topDepartEnY+25, 350, 55 };
     SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
     surface = TTF_RenderText_Solid(win->font,"AVEC", color);
     texture = SDL_CreateTextureFromSurface(win->renderer, surface);
     dstrect = { topDepartEnX+155, topDepartEnY+82, 90, 35 };
     SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
     color = { 142, 71, 141 };
     surface = TTF_RenderText_Solid(win->font,theFinalScore.c_str(), color);
     texture = SDL_CreateTextureFromSurface(win->renderer, surface);
     dstrect = { topDepartEnX+95, topDepartEnY+135, 210, 50 };
     SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+    SDL_DestroyTexture(texture);
+    SDL_FreeSurface(surface);
 
   }
-  else {
+  else { // ---- Affichage du score pour le mode solo ---- //
     color = { 174, 174, 174 };
     std::string theFinalScore = std::to_string(game1.get_score()) + " POINTS";
-    // Affichage texte
+    // ---- Affichage de fin ---- //
     surface = TTF_RenderText_Solid(win->font,"PARTIE TERMINEE", color);
     texture = SDL_CreateTextureFromSurface(win->renderer, surface);
     dstrect = { topDepartEnX+33, topDepartEnY+25, 340, 50 };
@@ -567,6 +802,10 @@ void Main::drawEndScreen() {
     SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
   }
 }
+
+// ---------------------------------------------- //
+// -------------- DESSIN D'UN CUBE -------------- //
+// ---------------------------------------------- //
 
 void Main::draw_boxi(int x, int y, int taille, SDL_Color color, int left_marge)
 {
@@ -586,7 +825,9 @@ void Main::draw_boxi_right(int sx, int sy, int x, int y, int taille,SDL_Color co
     SDL_RenderDrawRect(win->renderer,&dest);
 }
 
-
+// ----------------------------------------------- //
+// ---------------- FONCTION MAIN ---------------- //
+// ----------------------------------------------- //
 
 int main(int argc, char** argv)
 {
@@ -595,45 +836,10 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  if(argc < 1 || argc > 2)
-  {
-      std::cout << "Usage:" << argv[0] << " [versus | ordi] \n" ;
-      return 1;
-  }
-
-  if(argc == 2)
-  {
-      if(strcmp(argv[1],"versus") == 0)
-        {
-            Main m;
-            m.init(2,15,25,1850,1000);
-            m.loop();
-            return 0;
-        }
-      if(strcmp(argv[1],"ordi") == 0)
-        {
-            Main m;
-            m.init(3,15,25,1850,1000);
-            m.loop();
-            return 0;
-        }
-      if(strcmp(argv[1],"carnage") == 0)
-        {
-            Main m;
-            m.init(4,15,25,1850,1000);
-            m.loop();
-            return 0;
-        }
-      std::cout << "Usage:" << argv[0] << " [versus | ordi] \n" ;
-      return 1;
-  }
-  else
-  {
-      Main m;
-      m.init(1,15,25,1400,1000);
-      m.loop();
-  }
-
-    return 0;
+  Main m;
+  m.init(15,25,1850,1000);
+  // std::cout << "bjr\n";
+  m.loop();
+  return 0;
 
 }

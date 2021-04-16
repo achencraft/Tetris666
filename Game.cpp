@@ -1,6 +1,14 @@
 #include "Game.h"
 
+// ----------------------------------------------- //
+// ----------------- CONSTRUCTEUR ---------------- //
+// ----------------------------------------------- //
+
 Game::Game(){}
+
+// --------------------------------------------------- //
+// -------------- INITIALISATION DU JEU -------------- //
+// --------------------------------------------------- //
 
 void Game::init(int largeur_grille, int hauteur_grille, int player)
 {
@@ -18,6 +26,10 @@ void Game::init(int largeur_grille, int hauteur_grille, int player)
 
 }
 
+// -------------------------------------------------- //
+// -------------- CREATION D'UNE PIECE -------------- //
+// -------------------------------------------------- //
+
 Piece Game::nouvelle_piece()
 {
     struct timeval timer;
@@ -27,6 +39,10 @@ Piece Game::nouvelle_piece()
     Piece p = Piece(this->liste_pieces.at(piece_id),largeur_grille);
     return p;
 }
+
+// ----------------------------------------------------- //
+// -------- CHECK S'IL FAUT UNE NOUVELLE PIECE --------- //
+// ----------------------------------------------------- //
 
 void Game::check_nouvelle_piece()
 {
@@ -50,6 +66,10 @@ void Game::check_nouvelle_piece()
     }
 }
 
+// ------------------------------------------------- //
+// --------- ACTUALISE LA CHUTE D'UNE PIECE -------- //
+// ------------------------------------------------- //
+
 int Game::actualiser_chute()
 {
   JustSpawned = false;
@@ -67,6 +87,10 @@ int Game::actualiser_chute()
   return 0;
 }
 
+// --------------------------------------------- //
+// -------------- LANCE LA PARTIE -------------- //
+// --------------------------------------------- //
+
 void Game::debuter_partie()
 {
   if(!this->ZePartiiii) {
@@ -77,6 +101,10 @@ void Game::debuter_partie()
       this->tour = 0;
     }
 }
+
+// ------------------------------------------------ //
+// ---------- FONCTIONS DE TRANSFORMATION --------- //
+// ------------------------------------------------ //
 
 void Game::droite()
 {
@@ -96,6 +124,10 @@ void Game::rotation()
     this->piece_courante.rotation(this->largeur_grille, this->hauteur_grille, this->grille);
 }
 
+// ------------------------------------------------- //
+// -------------- SAUVEGARDE LA PIECE -------------- //
+// ------------------------------------------------- //
+
 void Game::sauvegarde()
 {
   if(!this->JustSpawned && this->yatilUnePieceEnTrainDeTomber)
@@ -103,6 +135,9 @@ void Game::sauvegarde()
     this->piece_courante.remonter(this->largeur_grille, this->grille);
 }
 
+// ---------------------------------------------- //
+// -------------- AJOUTE UNE LIGNE -------------- //
+// ---------------------------------------------- //
 
 void Game::ajouter_ligne(int nbr)
 {
@@ -120,6 +155,10 @@ void Game::ajouter_ligne(int nbr)
   }
 }
 
+// ---------------------------------------- //
+// -------------- SAUVEGARDE -------------- //
+// ---------------------------------------- //
+
 void Game::sauvegarde_piece()
 {
     int hauteur_piece,largeur_piece,min_x,min_y;
@@ -136,11 +175,11 @@ void Game::sauvegarde_piece()
       this->piece_courante = this->piece_sauvegarde;
       this->piece_sauvegarde = tmp;
     }
-
-
-
-
 }
+
+// ----------------------------------------------------- //
+// -------------- AJOUTE UNE PIECE AU MUR -------------- //
+// ----------------------------------------------------- //
 
 void Game::addPieceToTheGrille() {
   this->piece_courante.poser();
@@ -149,6 +188,10 @@ void Game::addPieceToTheGrille() {
     this->grille.insert(this->grille.end(),piece->at(i));
   }
 }
+
+// ------------------------------------------------------- //
+// -------- VERIFIE SI Y A DES LIGNES A SUPPRIMER -------- //
+// ------------------------------------------------------- //
 
 int Game::verificationLignes() {
   // tableau qui pour chaque ligne dit combien y a de boxies
@@ -174,7 +217,6 @@ int Game::verificationLignes() {
       int idx = 0;
       while(idx < tailleMur) {
         if(this->grille[idx].get_y() == i) {
-          Boxi adieuPetitBoxi = this->grille[idx];
           this->grille.erase(this->grille.begin()+idx);
           tailleMur = this->grille.size();
         }
@@ -199,6 +241,10 @@ int Game::verificationLignes() {
   return counter;
 }
 
+// ----------------------------------------------- //
+// --------- CHECK LES CONDITIONS DE FIN --------- //
+// ----------------------------------------------- //
+
 bool Game::EstCeFini() {
   // on parcourt les picèes en partant de la fin
   // on trouvera plus vite si la dernière posée est perdante ou pas
@@ -213,6 +259,9 @@ bool Game::EstCeFini() {
   return false;
 }
 
+// ---------------------------------------------- //
+// ------------------- GETTER ------------------- //
+// ---------------------------------------------- //
 
 std::vector<Boxi> Game::get_grille()
 {
@@ -252,6 +301,10 @@ bool Game::get_yatilUnePieceSauvee()
 int Game::getPlayer() {
   return this->quiSuisJe;
 }
+
+// ------------------------------------------------ //
+// -------------- CREATION DE PIECES -------------- //
+// ------------------------------------------------ //
 
 void Game::creer_pieces()
 {
