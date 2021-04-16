@@ -81,7 +81,7 @@ de jeu réduite!
 ### Mode VS IA
 
 Mode de jeu contre l'ordinateur. Pour le moment il n'y a pas de mode de difficulté,
-le seul implémenté est le mode *(très très très)* facile. L'IA n'est pas être
+le seul implémenté est le mode *(très très très)* facile. L'IA n'est pas très
 rusée.
 
 De même que pour le mode 1v1, quand l'un des deux joueurs remplit une ligne,
