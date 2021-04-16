@@ -16,6 +16,7 @@ void Main::init(int mode, int largeur_grille, int hauteur_grille, int tailleZone
     int taille_boxi = 1000/hauteur_grille;
     int largeurZoneJeu = taille_boxi*largeur_grille;
 
+    // Taille de la warzone
     tailleWarZoneX = tailleZoneJeuX;
     tailleWarZoneY = tailleZoneJeuY;
 
