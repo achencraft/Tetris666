@@ -51,12 +51,12 @@ void Main::loop()
   unsigned int lastTime3 = 0, delai_chute3 = 333;
   if(mode == 4) delai_chute3 = 0;
 
-
+  SDL_Event event;    
   while(!quit)
   {
     currentTime = SDL_GetTicks();
 
-    SDL_Event event;
+    
     while (!quit && SDL_PollEvent(&event))
     {
       switch (event.type)
@@ -399,6 +399,8 @@ void Main::afficher_colonne(int left_marge, Game game)
   SDL_Texture *texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   SDL_Rect dstrect = { left_marge, 45, 190, 50 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  SDL_DestroyTexture(texture);
+  SDL_FreeSurface(surface);
 
   // ---- Affichage score ---- //
   // carré fond noir
@@ -410,6 +412,8 @@ void Main::afficher_colonne(int left_marge, Game game)
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   dstrect = { left_marge+15, 160, 60, 14 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  SDL_DestroyTexture(texture);
+  SDL_FreeSurface(surface);
   // texte score
   SDL_Color colorPoints = { 90, 90, 90 };
   std::string s = std::to_string(game.get_score()) + " POINTS";
@@ -417,6 +421,8 @@ void Main::afficher_colonne(int left_marge, Game game)
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   dstrect = { left_marge+40, 210, 100, 40 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  SDL_DestroyTexture(texture);
+  SDL_FreeSurface(surface);
 
   //Affichage pièce suivante
   // carré fond noir
@@ -428,6 +434,8 @@ void Main::afficher_colonne(int left_marge, Game game)
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   dstrect = { left_marge+15, 355, 145, 20 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  SDL_DestroyTexture(texture);
+  SDL_FreeSurface(surface);
 
   //placer la prochaine pièce
   Piece piece_suivante = game.get_piece_suivante();
@@ -454,6 +462,8 @@ void Main::afficher_colonne(int left_marge, Game game)
   texture = SDL_CreateTextureFromSurface(win->renderer, surface);
   dstrect = { left_marge+15, 585, 165, 20 };
   SDL_RenderCopy(win->renderer, texture, NULL, &dstrect);
+  SDL_DestroyTexture(texture);
+  SDL_FreeSurface(surface);
 
   //placer la piece sauvegardee
   if(game.get_yatilUnePieceSauvee())
@@ -469,6 +479,7 @@ void Main::afficher_colonne(int left_marge, Game game)
       draw_boxi_right(-15,635,piece->at(i).get_x()-min_x+6, piece->at(i).get_y()-min_y+1, 15, color, left_marge);
     }
   }
+  
 
 }
 
