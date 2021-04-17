@@ -20,5 +20,9 @@ target_link_libraries(${PROJECT_NAME} SDL2::Main)
 find_package(SDL2_ttf REQUIRED)
 target_link_libraries(${PROJECT_NAME} SDL2::TTF)
 
+# Add SDL2_mixer library
+find_package(SDL2_mixer REQUIRED)
+target_link_libraries(${PROJECT_NAME} SDL2::Mixer)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2TFF_INCLUDE_DIRS})
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${SDL2_INCLUDE_DIRS} ${SDL2TFF_INCLUDE_DIRS} &{SDL2MIXER_INCLUDE_DIRS})

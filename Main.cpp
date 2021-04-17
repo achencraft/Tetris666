@@ -16,6 +16,10 @@ void Main::init(int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int 
     int taille_boxi = 1000/hauteur_grille;
     int largeurZoneJeu = taille_boxi*largeur_grille;
 
+
+    this->musique = Mix_LoadMUS("tetris-theme-a-acapella_boucle.mp3");
+    Mix_PlayMusic(this->musique, -1);
+
     // Taille de la warzone
     tailleWarZoneX = tailleZoneJeuX;
     tailleWarZoneY = tailleZoneJeuY;
@@ -239,6 +243,7 @@ void Main::loop()
     this->drawEndScreen();
     // affiche la surface
     SDL_RenderPresent(win->renderer);
+    Mix_FreeMusic(this->musique);
 
   }
 
@@ -836,10 +841,17 @@ int main(int argc, char** argv)
     return 1;
   }
 
+  if(Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, 1024) == -1) //Initialisation de l'API Mixer
+  {
+    printf("%s", Mix_GetError());
+  }
+
   Main m;
   m.init(15,25,1850,1000);
   // std::cout << "bjr\n";
   m.loop();
+
+  Mix_CloseAudio(); 
   return 0;
 
 }

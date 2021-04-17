@@ -9,6 +9,7 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <SDL_mixer.h>
 
 
 class Main
@@ -24,6 +25,7 @@ class Main
         int left_marge2;
         int tailleWarZoneX;
         int tailleWarZoneY;
+        Mix_Music *musique;
 
     public:
         inline Main():

@@ -20,7 +20,7 @@ destiné à devenir le prochain Grand Maître Tetris.
 
 ## Installations
 
-`sudo apt-get install libsdl2-dev libsdl2-ttf-dev`
+`sudo apt-get install libsdl2-dev libsdl2-ttf-dev libsdl2-mixer-dev`
 
 ## Compilation
 
