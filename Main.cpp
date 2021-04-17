@@ -37,7 +37,7 @@ void Main::init(int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int 
     for(int i = save; i > 1; i/=2)
     {
         Mix_VolumeMusic(i);
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        std::this_thread::sleep_for(std::chrono::milliseconds(200));
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
