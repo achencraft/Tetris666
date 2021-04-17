@@ -16,8 +16,8 @@ void Main::init(int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int 
     int taille_boxi = 1000/hauteur_grille;
     int largeurZoneJeu = taille_boxi*largeur_grille;
 
-
-    this->musique = Mix_LoadMUS("tetris-theme-a-acapella_boucle.mp3");
+    //Musique du menu
+    this->musique = Mix_LoadMUS("retro-bowl.mp3");
     Mix_PlayMusic(this->musique, -1);
 
     // Taille de la warzone
@@ -31,7 +31,23 @@ void Main::init(int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int 
     // Accès au menu
     this->drawMenu();
 
-    // std::cout << "bjr\n";
+    ///Musique du jeu
+    switch (mode)
+    {
+    case 1:
+        this->musique = Mix_LoadMUS("tetris-theme-a-acapella_boucle.mp3");
+        break;
+    case 2:
+        this->musique = Mix_LoadMUS("minecraft-theme-trap-remix-holder.mp3");
+        break;    
+    case 3:
+        this->musique = Mix_LoadMUS("code_lyoko_ifscl.mp3");
+        break;
+    case 4:
+        this->musique = Mix_LoadMUS("mii-channel-music-vgr-remix.mp3");
+        break;
+    }
+    Mix_PlayMusic(this->musique, -1);
 
     Game g1,g2;
     this->game1 = g1;
@@ -243,10 +259,11 @@ void Main::loop()
     this->drawEndScreen();
     // affiche la surface
     SDL_RenderPresent(win->renderer);
-    Mix_FreeMusic(this->musique);
+    
 
   }
 
+  
   SDL_Quit();
 }
 
@@ -706,6 +723,8 @@ void Main::drawMenu() {
     SDL_RenderPresent(win->renderer);
 
   }
+
+
 }
 
 // ------------------------------------------------- //
