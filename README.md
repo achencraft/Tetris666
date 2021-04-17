@@ -110,6 +110,6 @@ l'autre la reçoit en guise de malus!
 
 - Musique du menu : *Retro Browl* (https://www.youtube.com/watch?v=kf7DIBfD54U)
 - Musique mode Solo : *Tetris Theme A Acapela* (https://www.youtube.com/watch?v=PV06M-Gqxgg)
-- Musique mode 1v1 : *Minecraft Theme (TRAM REMIX) Holder* (https://www.youtube.com/watch?v=nL4i9FKuiEA) 
+- Musique mode 1v1 : *Minecraft Theme (TRAP REMIX) Holder* (https://www.youtube.com/watch?v=nL4i9FKuiEA) 
 - Musique mode VS IA : *Intro de Code Lyoko IFSCL*
 - Musique mode carnage : *mii channel music (VGR REMIX)* (https://www.youtube.com/watch?v=txXoCP8xngQ)
