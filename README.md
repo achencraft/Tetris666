@@ -76,7 +76,7 @@ de jeu réduite!
 * **Q:** aller à gauche
 * **D** aller à droite
 * **S** poser la pièce
-* **SHIFT gauche:** Sauvegarder la pièce
+* **A:** Sauvegarder la pièce
 
 ### Mode VS IA
 
