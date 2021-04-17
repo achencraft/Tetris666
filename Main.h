@@ -9,6 +9,8 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <chrono>
+#include <thread>
 #include <SDL_mixer.h>
 
 
@@ -26,6 +28,7 @@ class Main
         int tailleWarZoneX;
         int tailleWarZoneY;
         Mix_Music *musique;
+        Mix_Chunk *selection_sound;
 
     public:
         inline Main():

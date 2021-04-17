@@ -19,6 +19,8 @@ void Main::init(int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int 
     //Musique du menu
     this->musique = Mix_LoadMUS("retro-bowl.mp3");
     Mix_PlayMusic(this->musique, -1);
+    Mix_AllocateChannels(2);
+    this->selection_sound = Mix_LoadWAV("selection.ogg");
 
     // Taille de la warzone
     tailleWarZoneX = tailleZoneJeuX;
@@ -30,7 +32,16 @@ void Main::init(int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int 
 
     // Accès au menu
     this->drawMenu();
+    
+    int save = Mix_VolumeMusic(-1);
+    for(int i = save; i > 1; i/=2)
+    {
+        Mix_VolumeMusic(i);
+        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    }
 
+    std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    Mix_VolumeMusic(save);
     ///Musique du jeu
     switch (mode)
     {
@@ -47,6 +58,7 @@ void Main::init(int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int 
         this->musique = Mix_LoadMUS("mii-channel-music-vgr-remix.mp3");
         break;
     }
+    Mix_FreeChunk(this->selection_sound);
     Mix_PlayMusic(this->musique, -1);
 
     Game g1,g2;
@@ -571,6 +583,7 @@ void Main::drawMenu() {
                 std::cout << "Mode choisi = " << quelEstTonChoix+1 << "\n";
                 this->mode = quelEstTonChoix+1;
                 theChoosenHasBeenChoosen = true;
+                Mix_PlayChannel(-1, this->selection_sound, 0);
                 break;
               }
             case SDLK_ESCAPE:
@@ -877,6 +890,7 @@ int main(int argc, char** argv)
   // std::cout << "bjr\n";
   m.loop();
 
+  
   Mix_CloseAudio();
   return 0;
 
