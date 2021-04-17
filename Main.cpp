@@ -556,6 +556,13 @@ void Main::drawMenu() {
                 theChoosenHasBeenChoosen = true;
                 break;
               }
+            case SDLK_ESCAPE:
+              {
+                // On s'en va
+                SDL_Quit();
+                exit(0);
+                break;
+              }
             default: break;
           }
         default: break;
@@ -851,7 +858,7 @@ int main(int argc, char** argv)
   // std::cout << "bjr\n";
   m.loop();
 
-  Mix_CloseAudio(); 
+  Mix_CloseAudio();
   return 0;
 
 }
