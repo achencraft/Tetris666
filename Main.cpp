@@ -19,7 +19,7 @@ void Main::init(int largeur_grille, int hauteur_grille, int tailleZoneJeuX, int 
     //Musique du menu
     this->musique = Mix_LoadMUS("retro-bowl.mp3");
     Mix_PlayMusic(this->musique, -1);
-    Mix_AllocateChannels(2);
+    Mix_AllocateChannels(1);
     this->selection_sound = Mix_LoadWAV("selection.ogg");
 
     // Taille de la warzone
